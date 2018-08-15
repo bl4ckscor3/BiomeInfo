@@ -50,7 +50,7 @@ public class BiomeInfo
 
 			if(mc.world != null)
 			{
-				Chunk chunk = mc.world.getChunkFromBlockCoords(pos);
+				Chunk chunk = mc.world.getChunk(pos);
 
 				if(mc.world.isBlockLoaded(pos) && pos.getY() >= 0 && pos.getY() < 256)
 				{
