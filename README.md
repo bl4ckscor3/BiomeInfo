@@ -1,2 +1,1 @@
-# BiomeInfo
-A Minecraft mod that displays the current biome on screen
+Download link: https://minecraft.curseforge.com/projects/biome-info
