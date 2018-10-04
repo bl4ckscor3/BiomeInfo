@@ -3,6 +3,7 @@ package bl4ckscor3.mod.biomeinfo;
 import java.util.Arrays;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -20,7 +21,7 @@ public class BiomeInfo
 {
 	public static final String MODID = "biomeinfo";
 	public static final String NAME = "BiomeInfo";
-	public static final String VERSION = "v1.0";
+	public static final String VERSION = "v1.1";
 	public static final String MC_VERSION = "1.12";
 	@Instance(MODID)
 	public BiomeInfo instance;
@@ -50,12 +51,17 @@ public class BiomeInfo
 
 			if(mc.world != null)
 			{
-				Chunk chunk = mc.world.getChunk(pos);
-
 				if(mc.world.isBlockLoaded(pos) && pos.getY() >= 0 && pos.getY() < 256)
 				{
+					Chunk chunk = mc.world.getChunk(pos);
+
 					if(!chunk.isEmpty())
-						mc.fontRenderer.drawString(chunk.getBiome(pos, mc.world.getBiomeProvider()).getBiomeName(), Configuration.posX, Configuration.posY, Configuration.iColor);
+					{
+						GlStateManager.pushMatrix();
+						GlStateManager.scale(Configuration.scale, Configuration.scale, Configuration.scale);
+						mc.fontRenderer.drawString(chunk.getBiome(pos, mc.world.getBiomeProvider()).getBiomeName(), Configuration.posX, Configuration.posY, Configuration.iColor, Configuration.textShadow);
+						GlStateManager.popMatrix();
+					}
 				}
 			}
 		}

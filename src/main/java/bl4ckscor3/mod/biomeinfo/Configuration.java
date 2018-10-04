@@ -18,6 +18,12 @@ public class Configuration
 	@Config.Name("Position Y")
 	@Config.Comment("The Y position to display the biome info at")
 	public static int posY = 3;
+	@Config.Name("Scale")
+	@Config.Comment("The size of the biome info (multiplier)")
+	public static double scale = 1.0D;
+	@Config.Name("Shadow")
+	@Config.Comment("true if the biome info should be rendered with a shadow, false otherwise")
+	public static boolean textShadow = true;
 	@Config.Name("Color")
 	@Config.Comment("The color to display the biome info in (hexadecimal)")
 	public static String sColor = "ffffff";
