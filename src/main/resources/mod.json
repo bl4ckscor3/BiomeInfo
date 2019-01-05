@@ -1,0 +1,17 @@
+{
+  "id": "biomeinfo",
+  "name": "Biome Info",
+  "description": "Adds a customizable text to the top left corner saying what biome the player is in.",
+  "version": "v1.1",
+  "side": "universal",
+  "initializers": [
+    "bl4ckscor3.mod.biomeinfo.BiomeInfo"
+  ],
+  "requires": {
+    "fabric": "*"
+  },
+  "mixins": {
+    "client": "biomeinfo.client.json",
+    "common": "biomeinfo.common.json"
+  }
+}

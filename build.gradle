@@ -1,41 +1,24 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
+plugins {
+	id 'fabric-loom' version '0.2.0-SNAPSHOT'
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.12.x-v1.1"
-group= "bl4ckscor3.mod.biomeinfo" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 archivesBaseName = "biomeinfo"
-
-sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = "1.8"
-}
+version = "v1.1"
 
 minecraft {
-    version = "1.12.2-14.23.5.2768"
-    runDir = "run"
-    mappings = "stable_39"
 }
 
-processResources
-{
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+dependencies {
+	minecraft "com.mojang:minecraft:18w50a"
+	mappings "net.fabricmc:yarn:18w50a.90"
+	modCompile "net.fabricmc:fabric-loader:0.3.2.91"
+	modCompile "net.fabricmc:fabric:0.1.3.68"
+}
 
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
 }
