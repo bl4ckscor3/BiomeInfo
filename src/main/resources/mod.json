@@ -5,7 +5,6 @@
   "version": "v1.1",
   "side": "universal",
   "initializers": [
-    "bl4ckscor3.mod.biomeinfo.BiomeInfo"
   ],
   "requires": {
     "fabric": "*"

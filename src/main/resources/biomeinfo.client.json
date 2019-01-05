@@ -3,7 +3,7 @@
   "package": "bl4ckscor3.mod.biomeinfo.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    
+    "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
