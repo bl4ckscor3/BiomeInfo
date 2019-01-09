@@ -10,6 +10,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 
 @Mixin(GameRenderer.class)
@@ -33,13 +34,13 @@ public class GameRendererMixin
 
 				if(mc.world.isBlockLoaded(pos) && pos.getY() >= 0 && pos.getY() < 256)
 				{
-					WorldChunk chunk = mc.world.getChunk(pos);
+					Chunk chunk = mc.world.getChunk(pos);
 
-					if(!chunk.method_12223())
+					if(chunk instanceof WorldChunk && !((WorldChunk)chunk).isEmpty())
 					{
 						GlStateManager.pushMatrix();
 						GlStateManager.scaled(2.0D, 2.0D, 2.0D);
-						mc.fontRenderer.drawWithShadow(chunk.getBiome(pos).getTextComponent().getFormattedText(), 10, 10, 0xffffff);
+						mc.fontRenderer.drawWithShadow(chunk.getBiome(pos).getTextComponent().getFormattedText(), 5, 5, 0xffffff);
 						GlStateManager.popMatrix();
 					}
 				}
