@@ -5,26 +5,28 @@ import java.util.Arrays;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @Mod(modid=BiomeInfo.MODID, name=BiomeInfo.NAME, version=BiomeInfo.VERSION, acceptedMinecraftVersions="[" + BiomeInfo.MC_VERSION + "]", clientSideOnly=true)
 public class BiomeInfo
 {
 	public static final String MODID = "biomeinfo";
 	public static final String NAME = "BiomeInfo";
-	public static final String VERSION = "v1.1";
+	public static final String VERSION = "v1.2";
 	public static final String MC_VERSION = "1.12";
-	@Instance(MODID)
-	public BiomeInfo instance;
+	public Biome previousBiome;
+	public int displayTime = 0;
+	public int alpha = 0;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -39,6 +41,15 @@ public class BiomeInfo
 		meta.version = VERSION;
 
 		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@SubscribeEvent
+	public void onClientTick(ClientTickEvent event)
+	{
+		if(displayTime > 0)
+			displayTime--;
+		else if(alpha > 0)
+			alpha -= 10;
 	}
 
 	@SubscribeEvent
@@ -57,10 +68,22 @@ public class BiomeInfo
 
 					if(!chunk.isEmpty())
 					{
-						GlStateManager.pushMatrix();
-						GlStateManager.scale(Configuration.scale, Configuration.scale, Configuration.scale);
-						mc.fontRenderer.drawString(chunk.getBiome(pos, mc.world.getBiomeProvider()).getBiomeName(), Configuration.posX, Configuration.posY, Configuration.iColor, Configuration.textShadow);
-						GlStateManager.popMatrix();
+						Biome biome = chunk.getBiome(pos, mc.world.getBiomeProvider());
+
+						if(previousBiome != biome)
+						{
+							previousBiome = biome;
+							displayTime = Configuration.displayTime;
+							alpha = 255;
+						}
+
+						if(alpha > 0)
+						{
+							GlStateManager.pushMatrix();
+							GlStateManager.scale(Configuration.scale, Configuration.scale, Configuration.scale);
+							mc.fontRenderer.drawString(chunk.getBiome(pos, mc.world.getBiomeProvider()).getBiomeName(), Configuration.posX, Configuration.posY, Configuration.iColor | (alpha << 24), Configuration.textShadow);
+							GlStateManager.popMatrix();
+						}
 					}
 				}
 			}

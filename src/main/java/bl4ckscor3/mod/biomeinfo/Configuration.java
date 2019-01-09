@@ -1,6 +1,10 @@
 package bl4ckscor3.mod.biomeinfo;
 
 import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.Config.Comment;
+import net.minecraftforge.common.config.Config.Ignore;
+import net.minecraftforge.common.config.Config.Name;
+import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -9,25 +13,32 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid=BiomeInfo.MODID)
 public class Configuration
 {
-	@Config.Name("Enable")
-	@Config.Comment("true if the biome info should be shown, false otherwise")
+	@Name("Enable")
+	@Comment("true if the biome info should be shown, false otherwise")
 	public static boolean enabled = true;
-	@Config.Name("Position X")
-	@Config.Comment("The X position to display the biome info at")
+	@Name("Fade Out")
+	@Comment("true if the biome info should only show shortly when the biome is switched")
+	public static boolean fadeOut = true;
+	@Name("Display Time")
+	@Comment("How long in ticks (20 ticks = 1 second) to display the biome info, if fadeOut = true")
+	@RangeInt(min = 0, max = Integer.MAX_VALUE)
+	public static int displayTime = 30;
+	@Name("Position X")
+	@Comment("The X position to display the biome info at")
 	public static int posX = 3;
-	@Config.Name("Position Y")
-	@Config.Comment("The Y position to display the biome info at")
+	@Name("Position Y")
+	@Comment("The Y position to display the biome info at")
 	public static int posY = 3;
-	@Config.Name("Scale")
-	@Config.Comment("The size of the biome info (multiplier)")
+	@Name("Scale")
+	@Comment("The size of the biome info (multiplier)")
 	public static double scale = 1.0D;
-	@Config.Name("Shadow")
-	@Config.Comment("true if the biome info should be rendered with a shadow, false otherwise")
+	@Name("Shadow")
+	@Comment("true if the biome info should be rendered with a shadow, false otherwise")
 	public static boolean textShadow = true;
-	@Config.Name("Color")
-	@Config.Comment("The color to display the biome info in (hexadecimal)")
+	@Name("Color")
+	@Comment("The color to display the biome info in (hexadecimal)")
 	public static String sColor = "ffffff";
-	@Config.Ignore
+	@Ignore
 	public static int iColor = Integer.parseInt(sColor, 16);
 
 	@EventBusSubscriber
