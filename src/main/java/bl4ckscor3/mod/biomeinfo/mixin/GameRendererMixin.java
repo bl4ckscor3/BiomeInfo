@@ -21,8 +21,8 @@ public class GameRendererMixin
 					value = "INVOKE",
 					target = "Lcom/mojang/blaze3d/platform/GlStateManager;alphaFunc(IF)V"
 					),
-			method = "method_3192")
-	public void method_3192(float partialTicks, long nanoTime, boolean draw, CallbackInfo info)
+			method = "render")
+	public void render(float partialTicks, long nanoTime, boolean draw, CallbackInfo info)
 	{
 		if(!MinecraftClient.getInstance().options.debugEnabled)
 		{
