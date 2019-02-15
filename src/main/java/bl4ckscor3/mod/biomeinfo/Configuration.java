@@ -1,57 +1,123 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.Config.Comment;
-import net.minecraftforge.common.config.Config.Ignore;
-import net.minecraftforge.common.config.Config.Name;
-import net.minecraftforge.common.config.Config.RangeInt;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.commons.lang3.tuple.Pair;
 
-@Config(modid=BiomeInfo.MODID)
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+
 public class Configuration
 {
-	@Name("Enable")
-	@Comment("true if the biome info should be shown, false otherwise")
-	public static boolean enabled = true;
-	@Name("Fade Out")
-	@Comment("true if the biome info should only show shortly when the biome is switched")
-	public static boolean fadeOut = true;
-	@Name("Display Time")
-	@Comment("How long in ticks (20 ticks = 1 second) to display the biome info, if fadeOut = true")
-	@RangeInt(min = 0, max = Integer.MAX_VALUE)
-	public static int displayTime = 30;
-	@Name("Position X")
-	@Comment("The X position to display the biome info at")
-	public static int posX = 3;
-	@Name("Position Y")
-	@Comment("The Y position to display the biome info at")
-	public static int posY = 3;
-	@Name("Scale")
-	@Comment("The size of the biome info (multiplier)")
-	public static double scale = 1.0D;
-	@Name("Shadow")
-	@Comment("true if the biome info should be rendered with a shadow, false otherwise")
-	public static boolean textShadow = true;
-	@Name("Color")
-	@Comment("The color to display the biome info in (hexadecimal)")
-	public static String sColor = "ffffff";
-	@Ignore
-	public static int iColor = Integer.parseInt(sColor, 16);
+	public static final ForgeConfigSpec CONFIG_SPEC;
+	private static final Configuration CONFIG;
 
-	@EventBusSubscriber
-	public static class EventHandler
+	public final BooleanValue enabled;
+	public final BooleanValue fadeOut;
+	public final IntValue displayTime;
+	public final IntValue posX;
+	public final IntValue posY;
+	public final DoubleValue scale;
+	public final BooleanValue textShadow;
+	public final IntValue color;
+
+	static
 	{
-		@SubscribeEvent
-		public static void onOnConfigChangedEvent(final OnConfigChangedEvent event)
-		{
-			if(event.getModID().equals(BiomeInfo.MODID))
-			{
-				ConfigManager.sync(BiomeInfo.MODID, Config.Type.INSTANCE);
-				iColor = Integer.parseInt(sColor, 16);
-			}
-		}
+		Pair<Configuration,ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Configuration::new);
+
+		CONFIG_SPEC = specPair.getRight();
+		CONFIG = specPair.getLeft();
+	}
+
+	Configuration(ForgeConfigSpec.Builder builder)
+	{
+		enabled = builder
+				.comment("true if the biome info should be shown, false otherwise")
+				.define("enabled", true);
+		fadeOut = builder
+				.comment("true if the biome info should only show shortly when the biome is switched")
+				.define("fadeOut", true);
+		displayTime = builder
+				.comment("How long in ticks (20 ticks = 1 second) to display the biome info, if fadeOut = true")
+				.defineInRange("displayTime", 30, 0, Integer.MAX_VALUE);
+		posX = builder
+				.comment("The X position to display the biome info at")
+				.defineInRange("posX", 3, 0, Integer.MAX_VALUE);
+		posY = builder
+				.comment("The Y position to display the biome info at")
+				.defineInRange("posY", 3, 0, Integer.MAX_VALUE);
+		scale = builder
+				.comment("The size of the biome info (multiplier)")
+				.defineInRange("scale", 1.0D, 0.0D, Double.MAX_VALUE);
+		textShadow = builder
+				.comment("true if the biome info should be rendered with a shadow, false otherwise")
+				.define("textShadow", true);
+		color = builder
+				.comment("The color to display the biome info in (Format: 0xRRGGBB)")
+				.defineInRange("color", 0xffffff, 0x000000, 0xffffff);
+	}
+
+	public static boolean enabled()
+	{
+		if(CONFIG_SPEC == null)
+			return true;
+
+		return CONFIG.enabled.get();
+	}
+
+	public static boolean fadeOut()
+	{
+		if(CONFIG_SPEC == null)
+			return false;
+
+		return CONFIG.fadeOut.get();
+	}
+
+	public static int displayTime()
+	{
+		if(CONFIG_SPEC == null)
+			return 30;
+
+		return CONFIG.displayTime.get();
+	}
+
+	public static int posX()
+	{
+		if(CONFIG_SPEC == null)
+			return 3;
+
+		return CONFIG.posX.get();
+	}
+
+	public static int posY()
+	{
+		if(CONFIG_SPEC == null)
+			return 3;
+
+		return CONFIG.posY.get();
+	}
+
+	public static double scale ()
+	{
+		if(CONFIG_SPEC == null)
+			return 1.0D;
+
+		return CONFIG.scale.get();
+	}
+
+	public static boolean textShadow()
+	{
+		if(CONFIG_SPEC == null)
+			return true;
+
+		return CONFIG.textShadow.get();
+	}
+
+	public static int color()
+	{
+		if(CONFIG_SPEC == null)
+			return 0xffffff;
+
+		return CONFIG.color.get();
 	}
 }

@@ -1,0 +1,25 @@
+modLoader="javafml" #mandatory
+loaderVersion="[25,)" #mandatory
+issueTrackerURL="http://github.com/bl4ckscor3/BiomeInfo/issues"
+displayURL="http://minecraft.curseforge.com/projects/biomeinfo"
+authors="bl4ckscor3"
+
+[[mods]] #mandatory
+modId="biomeinfo" #mandatory
+version="v1.2.1" #mandatory
+displayName="BiomeInfo" #mandatory
+description='''Shows the current biome, without F3 overlay enabled.''' #mandatory
+
+[[dependencies.biomeinfo]]
+    modId="forge"
+    mandatory=true
+    versionRange="[25,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.biomeinfo]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.13.2]"
+    ordering="NONE"
+    side="BOTH"
