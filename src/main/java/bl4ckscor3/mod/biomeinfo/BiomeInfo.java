@@ -6,34 +6,43 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(BiomeInfo.MODID)
-@EventBusSubscriber
 public class BiomeInfo
 {
 	public static final String MODID = "biomeinfo";
 	public static Biome previousBiome;
 	public static int displayTime = 0;
 	public static int alpha = 0;
+	private boolean complete = false;
 
 	public BiomeInfo()
 	{
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.CONFIG_SPEC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onLoadComplete);
+		MinecraftForge.EVENT_BUS.addListener(this::onClientTick);
+		MinecraftForge.EVENT_BUS.addListener(this::onRenderGameOverlay);
 	}
 
-	@SubscribeEvent
-	public static void onClientTick(ClientTickEvent event)
+	public void onLoadComplete(FMLLoadCompleteEvent event)
 	{
-		if(!Configuration.fadeOut() && alpha != 255)
-			alpha = 255;
+		complete = true;
+	}
 
-		if(Configuration.fadeOut())
+	public void onClientTick(ClientTickEvent event)
+	{
+		if(!complete)
+			return;
+		else if(!Configuration.fadeOut() && alpha != 255)
+			alpha = 255;
+		else if(Configuration.fadeOut())
 		{
 			if(displayTime > 0)
 				displayTime--;
@@ -42,10 +51,9 @@ public class BiomeInfo
 		}
 	}
 
-	@SubscribeEvent
-	public static void onRenderGameOverlay(RenderGameOverlayEvent event)
+	public void onRenderGameOverlay(RenderGameOverlayEvent event)
 	{
-		if(Configuration.enabled() && event.getType() == ElementType.TEXT && !Minecraft.getInstance().gameSettings.showDebugInfo)
+		if(complete && Configuration.enabled() && event.getType() == ElementType.TEXT && !Minecraft.getInstance().gameSettings.showDebugInfo)
 		{
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = new BlockPos(mc.getRenderViewEntity().posX, mc.getRenderViewEntity().getBoundingBox().minY, mc.getRenderViewEntity().posZ);

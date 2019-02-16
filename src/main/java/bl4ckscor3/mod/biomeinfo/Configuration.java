@@ -59,65 +59,41 @@ public class Configuration
 
 	public static boolean enabled()
 	{
-		if(CONFIG_SPEC == null)
-			return true;
-
 		return CONFIG.enabled.get();
 	}
 
 	public static boolean fadeOut()
 	{
-		if(CONFIG_SPEC == null)
-			return false;
-
 		return CONFIG.fadeOut.get();
 	}
 
 	public static int displayTime()
 	{
-		if(CONFIG_SPEC == null)
-			return 30;
-
 		return CONFIG.displayTime.get();
 	}
 
 	public static int posX()
 	{
-		if(CONFIG_SPEC == null)
-			return 3;
-
 		return CONFIG.posX.get();
 	}
 
 	public static int posY()
 	{
-		if(CONFIG_SPEC == null)
-			return 3;
-
 		return CONFIG.posY.get();
 	}
 
 	public static double scale ()
 	{
-		if(CONFIG_SPEC == null)
-			return 1.0D;
-
 		return CONFIG.scale.get();
 	}
 
 	public static boolean textShadow()
 	{
-		if(CONFIG_SPEC == null)
-			return true;
-
 		return CONFIG.textShadow.get();
 	}
 
 	public static int color()
 	{
-		if(CONFIG_SPEC == null)
-			return 0xffffff;
-
 		return CONFIG.color.get();
 	}
 }
