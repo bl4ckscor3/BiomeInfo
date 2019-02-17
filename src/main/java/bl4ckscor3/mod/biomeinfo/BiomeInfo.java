@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 @Mod(BiomeInfo.MODID)
 public class BiomeInfo
@@ -25,10 +27,13 @@ public class BiomeInfo
 
 	public BiomeInfo()
 	{
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.CONFIG_SPEC);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onLoadComplete);
-		MinecraftForge.EVENT_BUS.addListener(this::onClientTick);
-		MinecraftForge.EVENT_BUS.addListener(this::onRenderGameOverlay);
+		if(FMLLoader.getDist() == Dist.CLIENT)
+		{
+			ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.CONFIG_SPEC);
+			FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onLoadComplete);
+			MinecraftForge.EVENT_BUS.addListener(this::onClientTick);
+			MinecraftForge.EVENT_BUS.addListener(this::onRenderGameOverlay);
+		}
 	}
 
 	public void onLoadComplete(FMLLoadCompleteEvent event)
