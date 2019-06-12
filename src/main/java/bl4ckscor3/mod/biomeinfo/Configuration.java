@@ -82,7 +82,7 @@ public class Configuration
 		return CONFIG.posY.get();
 	}
 
-	public static double scale ()
+	public static double scale()
 	{
 		return CONFIG.scale.get();
 	}
