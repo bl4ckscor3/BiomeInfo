@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "biomeinfo",
+  "version": "${version}",
+
+  "name": "Biome Info",
+  "description": "Adds a customizable text to the top left corner saying what biome the player is in.",
+  "authors": [
+    "bl4ckscor3"
+  ],
+  "contact": {
+    "homepage": "https://minecraft.curseforge.com/projects/biomeinfo/",
+    "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/1.14-fabric"
+  },
+
+  "license": "GPL-3.0",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+    ]
+  },
+  "mixins": [
+    "biomeinfo.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
