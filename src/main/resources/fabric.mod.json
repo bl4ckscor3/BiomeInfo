@@ -9,14 +9,14 @@
     "bl4ckscor3"
   ],
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/biomeinfo/",
+    "homepage": "https://curseforge.com/minecraft/mc-mods/biomeinfo-fabric",
     "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/1.14-fabric"
   },
 
   "license": "GPL-3.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/biomeinfo/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "main": [
     ]

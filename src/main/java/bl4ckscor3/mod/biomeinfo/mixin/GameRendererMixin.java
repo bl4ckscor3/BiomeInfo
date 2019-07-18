@@ -40,7 +40,7 @@ public class GameRendererMixin
 					{
 						GlStateManager.pushMatrix();
 						GlStateManager.scaled(2.0D, 2.0D, 2.0D);
-						mc.textRenderer.drawWithShadow(chunk.getBiome(pos).getTextComponent().getFormattedText(), 5, 5, 0xffffff);
+						mc.textRenderer.drawWithShadow(chunk.getBiome(pos).getName().asFormattedString(), 5, 5, 0xffffff);
 						GlStateManager.popMatrix();
 					}
 				}
