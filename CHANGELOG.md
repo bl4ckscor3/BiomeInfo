@@ -1,4 +1,7 @@
 ### v1.2.3
+- Fix mod not working with Forge 28.0.45+
+
+### v1.2.3
 - Fix crash when loading the mod on a server (which you shouldn't do)
 
 ### v1.2.2
