@@ -1,6 +1,6 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
@@ -62,13 +62,13 @@ public class BiomeInfo
 		if(complete && Configuration.enabled() && event.getType() == ElementType.TEXT && !Minecraft.getInstance().gameSettings.showDebugInfo)
 		{
 			Minecraft mc = Minecraft.getInstance();
-			BlockPos pos = new BlockPos(mc.getRenderViewEntity().posX, mc.getRenderViewEntity().getBoundingBox().minY, mc.getRenderViewEntity().posZ);
+			BlockPos pos = new BlockPos(mc.getRenderViewEntity());
 
 			if(mc.world != null)
 			{
 				if(mc.world.isBlockLoaded(pos) && pos.getY() >= 0 && pos.getY() < 256)
 				{
-					Biome biome = mc.world.getBiome(pos);
+					Biome biome = mc.world.func_226691_t_(pos);
 
 					if(previousBiome != biome)
 					{
@@ -81,15 +81,15 @@ public class BiomeInfo
 					{
 						double scale = Configuration.scale();
 
-						GlStateManager.pushMatrix();
-						GlStateManager.scaled(scale, scale, scale);
+						RenderSystem.pushMatrix();
+						RenderSystem.scaled(scale, scale, scale);
 
 						if(Configuration.textShadow())
 							mc.fontRenderer.drawStringWithShadow(biome.getDisplayName().getFormattedText(), Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 						else
 							mc.fontRenderer.drawString(biome.getDisplayName().getFormattedText(), Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 
-						GlStateManager.popMatrix();
+						RenderSystem.popMatrix();
 					}
 				}
 			}
