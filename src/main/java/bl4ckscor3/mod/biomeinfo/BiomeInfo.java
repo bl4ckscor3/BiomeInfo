@@ -8,7 +8,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -23,7 +22,7 @@ public class BiomeInfo
 {
 	public static final String MODID = "biomeinfo";
 	public static final String NAME = "BiomeInfo";
-	public static final String VERSION = "v1.2";
+	public static final String VERSION = "v1.2.5";
 	public static final String MC_VERSION = "1.12";
 	public Biome previousBiome;
 	public int displayTime = 0;
@@ -53,16 +52,21 @@ public class BiomeInfo
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event)
 	{
-		if(displayTime > 0)
-			displayTime--;
-		else if(alpha > 0)
-			alpha -= 10;
+		if(!Configuration.fadeOut && alpha != 255)
+			alpha = 255;
+		else if(Configuration.fadeOut)
+		{
+			if(displayTime > 0)
+				displayTime--;
+			else if(alpha > 0)
+				alpha -= 10;
+		}
 	}
 
 	@SubscribeEvent
-	public void onRenderGameOverlay(RenderGameOverlayEvent event)
+	public void onRenderGameOverlay(RenderGameOverlayEvent.Text event)
 	{
-		if(Configuration.enabled && event.getType() == ElementType.TEXT && !Minecraft.getMinecraft().gameSettings.showDebugInfo)
+		if(Configuration.enabled && !Minecraft.getMinecraft().gameSettings.showDebugInfo)
 		{
 			Minecraft mc = Minecraft.getMinecraft();
 			BlockPos pos = new BlockPos(mc.getRenderViewEntity().posX, mc.getRenderViewEntity().getEntityBoundingBox().minY, mc.getRenderViewEntity().posZ);
