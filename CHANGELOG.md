@@ -1,4 +1,7 @@
-### v1.2.3
+### v1.2.5
+- Improve performance
+
+### v1.2.4
 - Fix mod not working with Forge 28.0.45+
 
 ### v1.2.3

@@ -7,7 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -57,9 +56,9 @@ public class BiomeInfo
 		}
 	}
 
-	public void onRenderGameOverlay(RenderGameOverlayEvent event)
+	public void onRenderGameOverlay(RenderGameOverlayEvent.Text event)
 	{
-		if(complete && Configuration.enabled() && event.getType() == ElementType.TEXT && !Minecraft.getInstance().gameSettings.showDebugInfo)
+		if(complete && Configuration.enabled() && !Minecraft.getInstance().gameSettings.showDebugInfo)
 		{
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = new BlockPos(mc.getRenderViewEntity());
