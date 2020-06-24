@@ -1,1 +1,1 @@
-Download link: https://minecraft.curseforge.com/projects/biomeinfo
+Download link: https://minecraft.curseforge.com/projects/biomeinfo-fabric

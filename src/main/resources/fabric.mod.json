@@ -11,7 +11,7 @@
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/biomeinfo-fabric",
     "issues": "https://github.com/bl4ckscor3/BiomeInfo/issues",
-    "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/1.15-fabric"
+    "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/1.16-fabric"
   },
 
   "license": "GPL-3.0",
@@ -19,15 +19,10 @@
 
   "environment": "client",
   "entrypoints": {
-    "main": [
+    "client": [
+      "bl4ckscor3.mod.biomeinfo.BiomeInfo"
     ]
   },
-  "mixins": [
-    {
-    	"config": "biomeinfo.mixins.json",
-    	"environment": "client"
-    }
-  ],
 
   "depends": {
     "fabricloader": ">=0.7.0"
