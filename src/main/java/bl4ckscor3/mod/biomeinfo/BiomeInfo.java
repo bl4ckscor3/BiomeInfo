@@ -1,6 +1,6 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
@@ -61,13 +61,13 @@ public class BiomeInfo
 		if(complete && Configuration.enabled() && !Minecraft.getInstance().gameSettings.showDebugInfo)
 		{
 			Minecraft mc = Minecraft.getInstance();
-			BlockPos pos = new BlockPos(mc.getRenderViewEntity());
+			BlockPos pos = mc.getRenderViewEntity().func_233580_cy_();
 
 			if(mc.world != null)
 			{
 				if(mc.world.isBlockLoaded(pos) && pos.getY() >= 0 && pos.getY() < 256)
 				{
-					Biome biome = mc.world.func_226691_t_(pos);
+					Biome biome = mc.world.getBiome(pos);
 
 					if(previousBiome != biome)
 					{
@@ -78,17 +78,18 @@ public class BiomeInfo
 
 					if(alpha > 0)
 					{
-						double scale = Configuration.scale();
+						float scale = (float)Configuration.scale();
+						MatrixStack matrix = event.getMatrixStack();
 
-						RenderSystem.pushMatrix();
-						RenderSystem.scaled(scale, scale, scale);
+						matrix.push();
+						matrix.scale(scale, scale, scale);
 
 						if(Configuration.textShadow())
-							mc.fontRenderer.drawStringWithShadow(biome.getDisplayName().getFormattedText(), Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+							mc.fontRenderer.func_238405_a_(matrix, biome.getDisplayName().getString(), Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24)); //render with shadow
 						else
-							mc.fontRenderer.drawString(biome.getDisplayName().getFormattedText(), Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+							mc.fontRenderer.func_238421_b_(matrix, biome.getDisplayName().getString(), Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24)); //render without shadow
 
-						RenderSystem.popMatrix();
+						matrix.pop();
 					}
 				}
 			}

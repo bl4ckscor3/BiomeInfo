@@ -11,14 +11,14 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = '1.15.1-v1.2.5'
+version = '1.16.1-v1.2.5'
 group = 'bl4ckscor3.mod.biomeinfo'
 archivesBaseName = 'biomeinfo'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20191217-1.14.3'
+    mappings channel: 'snapshot', version: '20200514-1.16'
 	
     runs {
         client {
@@ -46,7 +46,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.1-30.0.7'
+    minecraft 'net.minecraftforge:forge:1.16.1-32.0.24'
 }
 
 jar {

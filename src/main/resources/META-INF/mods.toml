@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[30,)" #mandatory
+loaderVersion="[32,)" #mandatory
 
 [[mods]] #mandatory
 	modId="biomeinfo" #mandatory
@@ -13,13 +13,13 @@ loaderVersion="[30,)" #mandatory
 [[dependencies.biomeinfo]]
     modId="forge"
     mandatory=true
-    versionRange="[30,)"
+    versionRange="[32,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.biomeinfo]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15,1.16)"
+    versionRange="[1.16,1.17)"
     ordering="NONE"
     side="BOTH"
