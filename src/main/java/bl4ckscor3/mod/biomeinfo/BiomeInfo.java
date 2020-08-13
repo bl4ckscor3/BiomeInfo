@@ -3,7 +3,10 @@ package bl4ckscor3.mod.biomeinfo;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -61,11 +64,11 @@ public class BiomeInfo
 		if(complete && Configuration.enabled() && !Minecraft.getInstance().gameSettings.showDebugInfo)
 		{
 			Minecraft mc = Minecraft.getInstance();
-			BlockPos pos = mc.getRenderViewEntity().func_233580_cy_();
+			BlockPos pos = mc.getRenderViewEntity().getPosition();
 
 			if(mc.world != null)
 			{
-				if(mc.world.isBlockLoaded(pos) && pos.getY() >= 0 && pos.getY() < 256)
+				if(mc.world.isBlockPresent(pos) && pos.getY() >= 0 && pos.getY() < 256)
 				{
 					Biome biome = mc.world.getBiome(pos);
 
@@ -80,14 +83,15 @@ public class BiomeInfo
 					{
 						float scale = (float)Configuration.scale();
 						MatrixStack matrix = event.getMatrixStack();
+						TranslationTextComponent biomeName = new TranslationTextComponent(Util.makeTranslationKey("biome", mc.world.func_241828_r().func_243612_b(Registry.BIOME_KEY).getKey(biome)));
 
 						matrix.push();
 						matrix.scale(scale, scale, scale);
 
 						if(Configuration.textShadow())
-							mc.fontRenderer.func_238405_a_(matrix, biome.getDisplayName().getString(), Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24)); //render with shadow
+							mc.fontRenderer.func_243246_a(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 						else
-							mc.fontRenderer.func_238421_b_(matrix, biome.getDisplayName().getString(), Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24)); //render without shadow
+							mc.fontRenderer.func_243248_b(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 
 						matrix.pop();
 					}
