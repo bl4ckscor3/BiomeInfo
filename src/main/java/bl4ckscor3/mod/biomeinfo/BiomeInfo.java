@@ -65,9 +65,9 @@ public class BiomeInfo
 
 			if(mc.world != null)
 			{
-				if(mc.world.isBlockLoaded(pos) && pos.getY() >= 0 && pos.getY() < 256)
+				if(mc.world.isBlockPresent(pos) && pos.getY() >= 0 && pos.getY() < 256)
 				{
-					Biome biome = mc.world.func_226691_t_(pos);
+					Biome biome = mc.world.getBiome(pos);
 
 					if(previousBiome != biome)
 					{

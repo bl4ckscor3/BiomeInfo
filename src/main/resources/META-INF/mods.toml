@@ -3,7 +3,7 @@ loaderVersion="[30,)" #mandatory
 
 [[mods]] #mandatory
 	modId="biomeinfo" #mandatory
-	version="v1.2.5" #mandatory
+	version="${version}" #mandatory
 	displayName="BiomeInfo" #mandatory
 	description='''Shows the current biome, without F3 overlay enabled.''' #mandatory
 	issueTrackerURL="http://github.com/bl4ckscor3/BiomeInfo/issues"
