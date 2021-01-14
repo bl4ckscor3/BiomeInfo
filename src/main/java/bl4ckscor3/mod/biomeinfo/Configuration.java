@@ -14,6 +14,7 @@ public class Configuration
 
 	public final BooleanValue enabled;
 	public final BooleanValue fadeOut;
+	public final BooleanValue fadeIn;
 	public final IntValue displayTime;
 	public final IntValue posX;
 	public final IntValue posY;
@@ -35,10 +36,13 @@ public class Configuration
 				.comment("true if the biome info should be shown, false otherwise")
 				.define("enabled", true);
 		fadeOut = builder
-				.comment("true if the biome info should only show shortly when the biome is switched")
+				.comment("true if the biome info should fade out shortly after a different biome has been entered. If this is set to false, the biome info will stay visible")
 				.define("fadeOut", true);
+		fadeIn = builder
+				.comment("true if the biome info should fade in when a different biome has been entered")
+				.define("fadeIn", true);
 		displayTime = builder
-				.comment("How long in ticks (20 ticks = 1 second) to display the biome info, if fadeOut = true")
+				.comment("How long in ticks (20 ticks = 1 second) to display the biome info, if fadeOut = true. If fadeIn = true, the time will be counted from the moment the biome info has finished fading in.")
 				.defineInRange("displayTime", 30, 0, Integer.MAX_VALUE);
 		posX = builder
 				.comment("The X position to display the biome info at")
@@ -65,6 +69,11 @@ public class Configuration
 	public static boolean fadeOut()
 	{
 		return CONFIG.fadeOut.get();
+	}
+
+	public static boolean fadeIn()
+	{
+		return CONFIG.fadeIn.get();
 	}
 
 	public static int displayTime()

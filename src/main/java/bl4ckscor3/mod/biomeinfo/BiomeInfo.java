@@ -27,6 +27,7 @@ public class BiomeInfo
 	public static int displayTime = 0;
 	public static int alpha = 0;
 	private boolean complete = false;
+	private boolean fadingIn = false;
 
 	public BiomeInfo()
 	{
@@ -46,16 +47,31 @@ public class BiomeInfo
 
 	public void onClientTick(ClientTickEvent event)
 	{
-		if(!complete)
-			return;
-		else if(!Configuration.fadeOut() && alpha != 255)
-			alpha = 255;
-		else if(Configuration.fadeOut())
+		if(complete)
 		{
-			if(displayTime > 0)
-				displayTime--;
-			else if(alpha > 0)
-				alpha -= 10;
+			if(!fadingIn)
+			{
+				if(!Configuration.fadeOut() && alpha != 255)
+					alpha = 255;
+				else if(Configuration.fadeOut())
+				{
+					if(displayTime > 0)
+						displayTime--;
+					else if(alpha > 0)
+						alpha -= 10;
+				}
+			}
+			else //when fading in
+			{
+				alpha += 10;
+
+				if(alpha >= 255)
+				{
+					fadingIn = false;
+					displayTime = Configuration.displayTime();
+					alpha = 255;
+				}
+			}
 		}
 	}
 
@@ -68,22 +84,32 @@ public class BiomeInfo
 
 			if(mc.world != null)
 			{
-				if(mc.world.isBlockPresent(pos) && pos.getY() >= 0 && pos.getY() < 256)
+				if(mc.world.isBlockPresent(pos))
 				{
 					Biome biome = mc.world.getBiome(pos);
 
 					if(previousBiome != biome)
 					{
 						previousBiome = biome;
-						displayTime = Configuration.displayTime();
-						alpha = 255;
+
+						if(Configuration.fadeIn())
+						{
+							displayTime = 0;
+							alpha = 0;
+							fadingIn = true;
+						}
+						else
+						{
+							displayTime = Configuration.displayTime();
+							alpha = 255;
+						}
 					}
 
 					if(alpha > 0)
 					{
 						float scale = (float)Configuration.scale();
 						MatrixStack matrix = event.getMatrixStack();
-						TranslationTextComponent biomeName = new TranslationTextComponent(Util.makeTranslationKey("biome", mc.world.func_241828_r().func_243612_b(Registry.BIOME_KEY).getKey(biome)));
+						TranslationTextComponent biomeName = new TranslationTextComponent(Util.makeTranslationKey("biome", mc.world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(biome)));
 
 						matrix.push();
 						matrix.scale(scale, scale, scale);
