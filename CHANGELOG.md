@@ -1,3 +1,6 @@
+## v1.3
+- Add config option to fade in the biome info after a new biome has been entered
+
 ### v1.2.5
 - Improve performance
 

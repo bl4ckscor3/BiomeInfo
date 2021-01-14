@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = 'v1.2.5'
+version = 'v1.3'
 group = 'bl4ckscor3.mod.biomeinfo'
 archivesBaseName = 'biomeinfo-1.15.2'
 
