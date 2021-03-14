@@ -2,10 +2,12 @@ package bl4ckscor3.mod.biomeinfo;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.util.math.MatrixStack;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 
 public class BiomeInfo implements ClientModInitializer
@@ -28,10 +30,11 @@ public class BiomeInfo implements ClientModInitializer
 
 						if(biome != null)
 						{
-							System.out.println(biome.getName().asString());
+							TranslatableText biomeName = new TranslatableText(Util.createTranslationKey("biome", mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome)));
+
 							matrixStack.push();
 							matrixStack.scale(1,1,1);
-							mc.textRenderer.drawWithShadow(matrixStack, biome.getName().asString(), 50, 50, 0xFFFFFF| (255 << 24));
+							mc.textRenderer.drawWithShadow(matrixStack, biomeName, 3, 3, 0xFFFFFFFF);
 							matrixStack.pop();
 						}
 					}
