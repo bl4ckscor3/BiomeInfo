@@ -115,9 +115,9 @@ public class BiomeInfo
 						matrix.scale(scale, scale, scale);
 
 						if(Configuration.textShadow())
-							mc.fontRenderer.func_243246_a(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+							mc.fontRenderer.drawText(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 						else
-							mc.fontRenderer.func_243248_b(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+							mc.fontRenderer.drawTextWithShadow(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 
 						matrix.pop();
 					}
