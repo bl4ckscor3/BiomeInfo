@@ -24,7 +24,7 @@ public class BiomeInfo implements ClientModInitializer
 				{
 					BlockPos pos = mc.getCameraEntity().getBlockPos();
 
-					if(pos.getY() >= 0 && pos.getY() < 256)
+					if(mc.world.isInBuildLimit(pos))
 					{
 						Biome biome = mc.world.getBiome(pos);
 
