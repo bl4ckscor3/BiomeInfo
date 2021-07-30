@@ -2,19 +2,22 @@ package bl4ckscor3.mod.biomeinfo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
@@ -23,11 +26,12 @@ import net.minecraftforge.fml.loading.FMLLoader;
 public class BiomeInfo
 {
 	public static final String MODID = "biomeinfo";
-	public static Biome previousBiome;
-	public static int displayTime = 0;
-	public static int alpha = 0;
-	private boolean complete = false;
-	private boolean fadingIn = false;
+	public static final IIngameOverlay OVERLAY = OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HUD_TEXT_ELEMENT, MODID + ":overlay", BiomeInfo::renderBiomeInfo);
+	private static Biome previousBiome;
+	private static int displayTime = 0;
+	private static int alpha = 0;
+	private static boolean complete = false;
+	private static boolean fadingIn = false;
 
 	public BiomeInfo()
 	{
@@ -35,8 +39,8 @@ public class BiomeInfo
 		{
 			ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.CONFIG_SPEC);
 			FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onLoadComplete);
+			FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModConfigReloading);
 			MinecraftForge.EVENT_BUS.addListener(this::onClientTick);
-			MinecraftForge.EVENT_BUS.addListener(this::onRenderGameOverlay);
 		}
 	}
 
@@ -75,54 +79,56 @@ public class BiomeInfo
 		}
 	}
 
-	public void onRenderGameOverlay(RenderGameOverlayEvent.Text event)
+	public static void renderBiomeInfo(ForgeIngameGui gui, PoseStack matrix, float partialTicks, int width, int height)
 	{
 		if(complete && Configuration.enabled() && !Minecraft.getInstance().options.renderDebug)
 		{
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = mc.getCameraEntity().blockPosition();
 
-			if(mc.level != null)
+			if(mc.level != null && mc.level.isLoaded(pos))
 			{
-				if(mc.level.isLoaded(pos))
+				Biome biome = mc.level.getBiome(pos);
+
+				if(previousBiome != biome)
 				{
-					Biome biome = mc.level.getBiome(pos);
+					previousBiome = biome;
 
-					if(previousBiome != biome)
+					if(Configuration.fadeIn())
 					{
-						previousBiome = biome;
-
-						if(Configuration.fadeIn())
-						{
-							displayTime = 0;
-							alpha = 0;
-							fadingIn = true;
-						}
-						else
-						{
-							displayTime = Configuration.displayTime();
-							alpha = 255;
-						}
+						displayTime = 0;
+						alpha = 0;
+						fadingIn = true;
 					}
-
-					if(alpha > 0)
+					else
 					{
-						float scale = (float)Configuration.scale();
-						PoseStack matrix = event.getMatrixStack();
-						TranslatableComponent biomeName = new TranslatableComponent(Util.makeDescriptionId("biome", mc.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome)));
-
-						matrix.pushPose();
-						matrix.scale(scale, scale, scale);
-
-						if(Configuration.textShadow())
-							mc.font.draw(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
-						else
-							mc.font.drawShadow(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
-
-						matrix.popPose();
+						displayTime = Configuration.displayTime();
+						alpha = 255;
 					}
+				}
+
+				if(alpha > 0)
+				{
+					float scale = (float)Configuration.scale();
+					TranslatableComponent biomeName = new TranslatableComponent(Util.makeDescriptionId("biome", mc.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome)));
+
+					matrix.pushPose();
+					matrix.scale(scale, scale, scale);
+
+					if(!Configuration.textShadow())
+						mc.font.draw(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+					else
+						mc.font.drawShadow(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+
+					matrix.popPose();
 				}
 			}
 		}
+	}
+
+	public void onModConfigReloading(ModConfigEvent.Reloading event)
+	{
+		if(event.getConfig().getSpec() == Configuration.CONFIG_SPEC)
+			OverlayRegistry.enableOverlay(OVERLAY, Configuration.enabled());
 	}
 }
