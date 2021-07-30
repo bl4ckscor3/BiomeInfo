@@ -77,16 +77,16 @@ public class BiomeInfo
 
 	public void onRenderGameOverlay(RenderGameOverlayEvent.Text event)
 	{
-		if(complete && Configuration.enabled() && !Minecraft.getInstance().gameSettings.showDebugInfo)
+		if(complete && Configuration.enabled() && !Minecraft.getInstance().options.renderDebug)
 		{
 			Minecraft mc = Minecraft.getInstance();
-			BlockPos pos = mc.getRenderViewEntity().getPosition();
+			BlockPos pos = mc.getCameraEntity().blockPosition();
 
-			if(mc.world != null)
+			if(mc.level != null)
 			{
-				if(mc.world.isBlockPresent(pos))
+				if(mc.level.isLoaded(pos))
 				{
-					Biome biome = mc.world.getBiome(pos);
+					Biome biome = mc.level.getBiome(pos);
 
 					if(previousBiome != biome)
 					{
@@ -109,17 +109,17 @@ public class BiomeInfo
 					{
 						float scale = (float)Configuration.scale();
 						MatrixStack matrix = event.getMatrixStack();
-						TranslationTextComponent biomeName = new TranslationTextComponent(Util.makeTranslationKey("biome", mc.world.func_241828_r().getRegistry(Registry.BIOME_KEY).getKey(biome)));
+						TranslationTextComponent biomeName = new TranslationTextComponent(Util.makeDescriptionId("biome", mc.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome)));
 
-						matrix.push();
+						matrix.pushPose();
 						matrix.scale(scale, scale, scale);
 
 						if(Configuration.textShadow())
-							mc.fontRenderer.drawText(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+							mc.font.draw(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 						else
-							mc.fontRenderer.drawTextWithShadow(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+							mc.font.drawShadow(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 
-						matrix.pop();
+						matrix.popPose();
 					}
 				}
 			}
