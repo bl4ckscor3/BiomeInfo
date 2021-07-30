@@ -114,7 +114,7 @@ public class BiomeInfo
 						matrix.push();
 						matrix.scale(scale, scale, scale);
 
-						if(Configuration.textShadow())
+						if(!Configuration.textShadow())
 							mc.fontRenderer.drawText(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 						else
 							mc.fontRenderer.drawTextWithShadow(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));

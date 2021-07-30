@@ -1,3 +1,6 @@
+### v1.3.1
+- Fix text shadow config option doing the exact opposite of what it should
+
 ## v1.3
 - Add config option to fade in the biome info after a new biome has been entered
 
