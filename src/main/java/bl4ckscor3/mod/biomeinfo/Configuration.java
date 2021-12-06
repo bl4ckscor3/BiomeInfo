@@ -46,10 +46,10 @@ public class Configuration
 				.defineInRange("displayTime", 30, 0, Integer.MAX_VALUE);
 		posX = builder
 				.comment("The X position to display the biome info at")
-				.defineInRange("posX", 3, 0, Integer.MAX_VALUE);
+				.defineInRange("posX", 3, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		posY = builder
 				.comment("The Y position to display the biome info at")
-				.defineInRange("posY", 3, 0, Integer.MAX_VALUE);
+				.defineInRange("posY", 3, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		scale = builder
 				.comment("The size of the biome info (multiplier)")
 				.defineInRange("scale", 1.0D, 0.0D, Double.MAX_VALUE);
