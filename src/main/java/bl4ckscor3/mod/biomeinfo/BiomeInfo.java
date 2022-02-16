@@ -77,7 +77,7 @@ public class BiomeInfo
 
 	public void onRenderGameOverlay(RenderGameOverlayEvent.Text event)
 	{
-		if(complete && Configuration.enabled() && !Minecraft.getInstance().options.renderDebug)
+		if(complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().options.renderDebug))
 		{
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = mc.getCameraEntity().blockPosition();

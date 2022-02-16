@@ -1,3 +1,6 @@
+## v1.4
+- Add config option to control whether the biome info should show when the debug screen is active
+
 ### v1.3.1
 - Fix text shadow config option doing the exact opposite of what it should
 
