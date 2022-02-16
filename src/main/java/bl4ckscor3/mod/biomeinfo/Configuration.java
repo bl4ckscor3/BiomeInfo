@@ -21,6 +21,7 @@ public class Configuration
 	public final DoubleValue scale;
 	public final BooleanValue textShadow;
 	public final IntValue color;
+	public final BooleanValue hideOnDebugScreen;
 
 	static
 	{
@@ -59,6 +60,9 @@ public class Configuration
 		color = builder
 				.comment("The color to display the biome info in (Format: 0xRRGGBB)")
 				.defineInRange("color", 0xffffff, 0x000000, 0xffffff);
+		hideOnDebugScreen = builder
+				.comment("If true, hides the mod's info text when the debug screen (F3) is open.")
+				.define("hideOnDebugScreen", true);
 	}
 
 	public static boolean enabled()
@@ -104,5 +108,10 @@ public class Configuration
 	public static int color()
 	{
 		return CONFIG.color.get();
+	}
+
+	public static boolean hideOnDebugScreen()
+	{
+		return CONFIG.hideOnDebugScreen.get();
 	}
 }

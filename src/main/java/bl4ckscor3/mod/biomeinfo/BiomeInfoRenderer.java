@@ -67,7 +67,7 @@ public class BiomeInfoRenderer
 
 	public static void renderBiomeInfo(ForgeIngameGui gui, PoseStack matrix, float partialTicks, int width, int height)
 	{
-		if(complete && Configuration.enabled() && !Minecraft.getInstance().options.renderDebug)
+		if(complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().options.renderDebug))
 		{
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = mc.getCameraEntity().blockPosition();
