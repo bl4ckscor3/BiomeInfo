@@ -2,13 +2,14 @@ package bl4ckscor3.mod.biomeinfo;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.DebugScreenOverlay;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.biome.Biome;
 
 public class BiomeInfo implements ClientModInitializer
 {
@@ -16,26 +17,28 @@ public class BiomeInfo implements ClientModInitializer
 	public void onInitializeClient()
 	{
 		HudRenderCallback.EVENT.register((matrixStack, delta) -> {
-			if(!MinecraftClient.getInstance().options.debugEnabled)
+			if(!Minecraft.getInstance().options.renderDebug)
 			{
-				MinecraftClient mc = MinecraftClient.getInstance();
+				Minecraft mc = Minecraft.getInstance();
 
-				if(mc.world != null)
+				if(mc.level != null)
 				{
-					BlockPos pos = mc.getCameraEntity().getBlockPos();
+					BlockPos pos = mc.getCameraEntity().blockPosition();
 
-					if(mc.world.isInBuildLimit(pos))
+					if(mc.level.isInWorldBounds(pos))
 					{
-						Biome biome = mc.world.getBiome(pos);
+						Holder<Biome> biome = mc.level.getBiome(pos);
 
-						if(biome != null)
+						if(biome.isBound())
 						{
-							TranslatableText biomeName = new TranslatableText(Util.createTranslationKey("biome", mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome)));
+							biome.unwrapKey().ifPresent(key -> {
+								TranslatableComponent biomeName = new TranslatableComponent(Util.makeDescriptionId("biome", key.location()));
 
-							matrixStack.push();
-							matrixStack.scale(1,1,1);
-							mc.textRenderer.drawWithShadow(matrixStack, biomeName, 3, 3, 0xFFFFFFFF);
-							matrixStack.pop();
+								matrixStack.pushPose();
+								matrixStack.scale(1,1,1);
+								mc.font.drawShadow(matrixStack, biomeName, 3, 3, 0xFFFFFFFF);
+								matrixStack.popPose();
+							});
 						}
 					}
 				}
