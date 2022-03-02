@@ -3,8 +3,8 @@
   "id": "biomeinfo",
   "version": "${version}",
 
-  "name": "Biome Info",
-  "description": "Adds a text to the top left corner saying what biome the player is in.",
+  "name": "BiomeInfo",
+  "description": "Adds a configurable text to the top left corner (by default) saying what biome the player is in.",
   "authors": [
     "bl4ckscor3"
   ],
@@ -21,13 +21,17 @@
   "entrypoints": {
     "client": [
       "bl4ckscor3.mod.biomeinfo.BiomeInfo"
+    ],
+    "modmenu": [
+      "bl4ckscor3.mod.biomeinfo.ModMenuIntegration"
     ]
   },
 
   "depends": {
     "fabricloader": ">=0.7.0",
     "minecraft": "1.18.x",
-    "java": ">=17"
+    "java": ">=17",
+    "cloth-config": ">=6.2.57"
   },
   "suggests": {
     "flamingo": "*"

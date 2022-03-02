@@ -1,0 +1,13 @@
+{
+  "text.autoconfig.biomeinfo.title": "BiomeInfo Settings",
+  "text.autoconfig.biomeinfo.option.enabled": "Enabled",
+  "text.autoconfig.biomeinfo.option.fadeOut": "Fade out",
+  "text.autoconfig.biomeinfo.option.fadeIn": "Fade in",
+  "text.autoconfig.biomeinfo.option.displayTime": "Display time",
+  "text.autoconfig.biomeinfo.option.posX": "Horizontal text position",
+  "text.autoconfig.biomeinfo.option.posY": "Vertical text position",
+  "text.autoconfig.biomeinfo.option.scale": "Text scale",
+  "text.autoconfig.biomeinfo.option.textShadow": "Text shadow",
+  "text.autoconfig.biomeinfo.option.color": "Text color",
+  "text.autoconfig.biomeinfo.option.hideOnDebugScreen": "Hide text on debug screen (F3)"
+}

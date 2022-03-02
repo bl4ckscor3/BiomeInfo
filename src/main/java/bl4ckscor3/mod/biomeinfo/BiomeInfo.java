@@ -1,6 +1,9 @@
 package bl4ckscor3.mod.biomeinfo;
 
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -11,33 +14,90 @@ import net.minecraft.world.level.biome.Biome;
 
 public class BiomeInfo implements ClientModInitializer
 {
+	private BiomeInfoConfig config;
+	public static Biome previousBiome;
+	public static int displayTime = 0;
+	public static int alpha = 0;
+	public static boolean fadingIn = false;
+
 	@Override
 	public void onInitializeClient()
 	{
-		HudRenderCallback.EVENT.register((matrixStack, delta) -> {
-			if(!Minecraft.getInstance().options.renderDebug)
+		AutoConfig.register(BiomeInfoConfig.class, JanksonConfigSerializer::new);
+		config = AutoConfig.getConfigHolder(BiomeInfoConfig.class).getConfig();
+		ClientTickEvents.START_CLIENT_TICK.register(client -> {
+			if(!fadingIn)
+			{
+				if(!config.fadeOut && alpha != 255)
+					alpha = 255;
+				else if(config.fadeOut)
+				{
+					if(displayTime > 0)
+						displayTime--;
+					else if(alpha > 0)
+						alpha -= 10;
+				}
+			}
+			else //when fading in
+			{
+				alpha += 10;
+
+				if(alpha >= 255)
+				{
+					fadingIn = false;
+					displayTime = Math.max(0, config.displayTime);
+					alpha = 255;
+				}
+			}
+		});
+		HudRenderCallback.EVENT.register((pose, delta) -> {
+			if(config.enabled && (!config.hideOnDebugScreen || !Minecraft.getInstance().options.renderDebug))
 			{
 				Minecraft mc = Minecraft.getInstance();
+				BlockPos pos = mc.getCameraEntity().blockPosition();
 
-				if(mc.level != null)
+				if(mc.level != null && mc.level.isLoaded(pos))
 				{
-					BlockPos pos = mc.getCameraEntity().blockPosition();
+					Holder<Biome> biomeHolder = mc.level.getBiome(pos);
 
-					if(mc.level.isInWorldBounds(pos))
+					if(!biomeHolder.isBound())
+						return;
+
+					Biome biome = biomeHolder.value();
+
+					if(previousBiome != biome)
 					{
-						Holder<Biome> biome = mc.level.getBiome(pos);
+						previousBiome = biome;
 
-						if(biome.isBound())
+						if(config.fadeIn)
 						{
-							biome.unwrapKey().ifPresent(key -> {
-								TranslatableComponent biomeName = new TranslatableComponent(Util.makeDescriptionId("biome", key.location()));
-
-								matrixStack.pushPose();
-								matrixStack.scale(1,1,1);
-								mc.font.drawShadow(matrixStack, biomeName, 3, 3, 0xFFFFFFFF);
-								matrixStack.popPose();
-							});
+							displayTime = 0;
+							alpha = 0;
+							fadingIn = true;
 						}
+						else
+						{
+							displayTime = Math.max(0, config.displayTime);
+							alpha = 255;
+						}
+					}
+
+					if(alpha > 0)
+					{
+						biomeHolder.unwrapKey().ifPresent(key -> {
+							float scale = (float)config.scale;
+							TranslatableComponent biomeName = new TranslatableComponent(Util.makeDescriptionId("biome", key.location()));
+
+							pose.pushPose();
+							pose.scale(scale, scale, scale);
+
+							if(!config.textShadow)
+								mc.font.draw(pose, biomeName, config.posX, config.posY, config.color| (alpha << 24));
+							else
+								mc.font.drawShadow(pose, biomeName, config.posX, config.posY, config.color| (alpha << 24));
+
+							pose.popPose();
+						});
 					}
 				}
 			}
