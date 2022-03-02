@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://maven.parchmentmc.org' }
         mavenCentral()
     }
@@ -16,13 +16,13 @@ apply plugin: 'eclipse'
 
 version = '1.4'
 group = 'bl4ckscor3.mod.biomeinfo'
-archivesBaseName = 'biomeinfo-1.18.1'
+archivesBaseName = 'biomeinfo-1.18.2'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft {
-    mappings channel: 'parchment', version: '2022.01.23-1.18.1'
+    mappings channel: 'official', version: '1.18.2'
 	
     runs {
         client {
@@ -39,7 +39,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.59'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.1'
 }
 
 jar {

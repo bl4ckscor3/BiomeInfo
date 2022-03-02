@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
@@ -65,7 +65,7 @@ public class BiomeInfoRenderer
 		}
 	}
 
-	public static void renderBiomeInfo(ForgeIngameGui gui, PoseStack matrix, float partialTicks, int width, int height)
+	public static void renderBiomeInfo(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height)
 	{
 		if(complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().options.renderDebug))
 		{
@@ -74,7 +74,12 @@ public class BiomeInfoRenderer
 
 			if(mc.level != null && mc.level.isLoaded(pos))
 			{
-				Biome biome = mc.level.getBiome(pos);
+				Holder<Biome> biomeHolder = mc.level.getBiome(pos);
+
+				if(!biomeHolder.isBound())
+					return;
+
+				Biome biome = biomeHolder.value();
 
 				if(previousBiome != biome)
 				{
@@ -95,18 +100,20 @@ public class BiomeInfoRenderer
 
 				if(alpha > 0)
 				{
-					float scale = (float)Configuration.scale();
-					TranslatableComponent biomeName = new TranslatableComponent(Util.makeDescriptionId("biome", mc.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(biome)));
+					biomeHolder.unwrapKey().ifPresent(key -> {
+						float scale = (float)Configuration.scale();
+						TranslatableComponent biomeName = new TranslatableComponent(Util.makeDescriptionId("biome", key.location()));
 
-					matrix.pushPose();
-					matrix.scale(scale, scale, scale);
+						pose.pushPose();
+						pose.scale(scale, scale, scale);
 
-					if(!Configuration.textShadow())
-						mc.font.draw(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
-					else
-						mc.font.drawShadow(matrix, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+						if(!Configuration.textShadow())
+							mc.font.draw(pose, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+						else
+							mc.font.drawShadow(pose, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
 
-					matrix.popPose();
+						pose.popPose();
+					});
 				}
 			}
 		}

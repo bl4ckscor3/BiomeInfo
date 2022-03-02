@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[38,)" #mandatory
+loaderVersion="[40,)" #mandatory
 license="GNU GPL v3.0 https://github.com/bl4ckscor3/BiomeInfo/blob/1.18/LICENSE"
 
 [[mods]] #mandatory
@@ -14,13 +14,13 @@ license="GNU GPL v3.0 https://github.com/bl4ckscor3/BiomeInfo/blob/1.18/LICENSE"
 [[dependencies.biomeinfo]]
     modId="forge"
     mandatory=true
-    versionRange="[38,)"
+    versionRange="[40,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.biomeinfo]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18,1.19)"
+    versionRange="[1.18.2,1.19)"
     ordering="NONE"
     side="BOTH"
