@@ -11,7 +11,7 @@
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/biomeinfo-fabric",
     "issues": "https://github.com/bl4ckscor3/BiomeInfo/issues",
-    "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/1.18-fabric"
+    "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/1.19-fabric"
   },
 
   "license": "GPL-3.0",
@@ -29,7 +29,7 @@
 
   "depends": {
     "fabricloader": ">=0.7.0",
-    "minecraft": "1.18.x",
+    "minecraft": "~1.19",
     "java": ">=17",
     "cloth-config": ">=6.2.57"
   },

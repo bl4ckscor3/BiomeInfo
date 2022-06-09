@@ -9,7 +9,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.biome.Biome;
 
 public class BiomeInfo implements ClientModInitializer
@@ -86,7 +86,7 @@ public class BiomeInfo implements ClientModInitializer
 					{
 						biomeHolder.unwrapKey().ifPresent(key -> {
 							float scale = (float)config.scale;
-							TranslatableComponent biomeName = new TranslatableComponent(Util.makeDescriptionId("biome", key.location()));
+							Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
 
 							pose.pushPose();
 							pose.scale(scale, scale, scale);
