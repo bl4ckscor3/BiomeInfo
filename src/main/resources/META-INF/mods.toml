@@ -1,12 +1,12 @@
-modLoader="javafml" #mandatory
-loaderVersion="[40,)" #mandatory
-license="GNU GPL v3.0 https://github.com/bl4ckscor3/BiomeInfo/blob/1.18/LICENSE"
+modLoader="javafml"
+loaderVersion="[41,)"
+license="GNU GPL v3.0 https://github.com/bl4ckscor3/BiomeInfo/blob/1.19/LICENSE"
 
-[[mods]] #mandatory
-	modId="biomeinfo" #mandatory
-	version="${file.jarVersion}" #mandatory
-	displayName="BiomeInfo" #mandatory
-	description='''Shows the current biome, without F3 overlay enabled.''' #mandatory
+[[mods]]
+	modId="biomeinfo"
+	version="${file.jarVersion}"
+	displayName="BiomeInfo"
+	description='''Shows the current biome, without F3 overlay enabled.'''
 	issueTrackerURL="http://github.com/bl4ckscor3/BiomeInfo/issues"
 	displayURL="http://minecraft.curseforge.com/projects/biomeinfo"
 	authors="bl4ckscor3"
@@ -14,13 +14,13 @@ license="GNU GPL v3.0 https://github.com/bl4ckscor3/BiomeInfo/blob/1.18/LICENSE"
 [[dependencies.biomeinfo]]
     modId="forge"
     mandatory=true
-    versionRange="[40,)"
+    versionRange="[41,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.biomeinfo]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,1.19)"
+    versionRange="[1.19,1.20)"
     ordering="NONE"
     side="BOTH"
