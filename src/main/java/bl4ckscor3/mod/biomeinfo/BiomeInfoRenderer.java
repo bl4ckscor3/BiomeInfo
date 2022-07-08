@@ -9,20 +9,21 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
-import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@EventBusSubscriber(modid=BiomeInfo.MODID, value=Dist.CLIENT)
+@EventBusSubscriber(modid=BiomeInfo.MODID, value=Dist.CLIENT, bus=Bus.MOD)
 public class BiomeInfoRenderer
 {
-	public static final IIngameOverlay OVERLAY = OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HUD_TEXT_ELEMENT, BiomeInfo.MODID + ":overlay", BiomeInfoRenderer::renderBiomeInfo);
+	public static final IGuiOverlay OVERLAY = BiomeInfoRenderer::renderBiomeInfo;
 	public static Biome previousBiome;
 	public static int displayTime = 0;
 	public static int alpha = 0;
@@ -30,11 +31,9 @@ public class BiomeInfoRenderer
 	public static boolean fadingIn = false;
 
 	static {
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(BiomeInfoRenderer::onLoadComplete);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(BiomeInfoRenderer::onModConfigReloading);
+		MinecraftForge.EVENT_BUS.addListener(BiomeInfoRenderer::onClientTick);
 	}
 
-	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event)
 	{
 		if(complete)
@@ -65,7 +64,7 @@ public class BiomeInfoRenderer
 		}
 	}
 
-	public static void renderBiomeInfo(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height)
+	public static void renderBiomeInfo(ForgeGui gui, PoseStack pose, float partialTicks, int width, int height)
 	{
 		if(complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().options.renderDebug))
 		{
@@ -119,14 +118,15 @@ public class BiomeInfoRenderer
 		}
 	}
 
+	@SubscribeEvent
+	public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event)
+	{
+		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), "overlay", OVERLAY);
+	}
+
+	@SubscribeEvent
 	public static void onLoadComplete(FMLLoadCompleteEvent event)
 	{
 		complete = true;
-	}
-
-	public static void onModConfigReloading(ModConfigEvent.Reloading event)
-	{
-		if(event.getConfig().getSpec() == Configuration.CONFIG_SPEC)
-			OverlayRegistry.enableOverlay(OVERLAY, Configuration.enabled());
 	}
 }
