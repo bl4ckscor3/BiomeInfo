@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "BiomeInfo",
-  "description": "Adds a configurable text to the top left corner (by default) saying what biome the player is in.",
+  "description": "Displays the name of the current biome on screen.",
   "authors": [
     "bl4ckscor3"
   ],

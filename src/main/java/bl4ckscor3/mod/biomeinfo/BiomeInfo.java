@@ -87,14 +87,15 @@ public class BiomeInfo implements ClientModInitializer
 						biomeHolder.unwrapKey().ifPresent(key -> {
 							float scale = (float)config.scale;
 							Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
+							int length = config.textAlignment.getNegativeOffset(mc.font, biomeName);
 
 							pose.pushPose();
 							pose.scale(scale, scale, scale);
 
 							if(!config.textShadow)
-								mc.font.draw(pose, biomeName, config.posX, config.posY, config.color| (alpha << 24));
+								mc.font.draw(pose, biomeName, config.posX - length, config.posY, config.color| (alpha << 24));
 							else
-								mc.font.drawShadow(pose, biomeName, config.posX, config.posY, config.color| (alpha << 24));
+								mc.font.drawShadow(pose, biomeName, config.posX - length, config.posY, config.color| (alpha << 24));
 
 							pose.popPose();
 						});

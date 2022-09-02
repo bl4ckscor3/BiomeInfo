@@ -9,5 +9,6 @@
   "text.autoconfig.biomeinfo.option.scale": "Text scale",
   "text.autoconfig.biomeinfo.option.textShadow": "Text shadow",
   "text.autoconfig.biomeinfo.option.color": "Text color",
-  "text.autoconfig.biomeinfo.option.hideOnDebugScreen": "Hide text on debug screen (F3)"
+  "text.autoconfig.biomeinfo.option.hideOnDebugScreen": "Hide text on debug screen (F3)",
+  "text.autoconfig.biomeinfo.option.textAlignment": "Text Alignment"
 }
