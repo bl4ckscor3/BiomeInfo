@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
 public class Configuration
@@ -22,6 +23,7 @@ public class Configuration
 	public final BooleanValue textShadow;
 	public final IntValue color;
 	public final BooleanValue hideOnDebugScreen;
+	public final EnumValue<TextAlignment> textAlignment;
 
 	static
 	{
@@ -63,6 +65,9 @@ public class Configuration
 		hideOnDebugScreen = builder
 				.comment("If true, hides the mod's info text when the debug screen (F3) is open.")
 				.define("hideOnDebugScreen", true);
+		textAlignment = builder
+				.comment("The text alignment of the biome info.")
+				.defineEnum("textAlignment", TextAlignment.LEFT);
 	}
 
 	public static boolean enabled()
@@ -113,5 +118,10 @@ public class Configuration
 	public static boolean hideOnDebugScreen()
 	{
 		return CONFIG.hideOnDebugScreen.get();
+	}
+
+	public static TextAlignment textAlignment()
+	{
+		return CONFIG.textAlignment.get();
 	}
 }

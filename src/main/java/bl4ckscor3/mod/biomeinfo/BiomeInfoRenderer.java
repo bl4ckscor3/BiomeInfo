@@ -102,14 +102,15 @@ public class BiomeInfoRenderer
 					biomeHolder.unwrapKey().ifPresent(key -> {
 						float scale = (float)Configuration.scale();
 						Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
+						int length = Configuration.textAlignment().getNegativeOffset(mc.font, biomeName);
 
 						pose.pushPose();
 						pose.scale(scale, scale, scale);
 
 						if(!Configuration.textShadow())
-							mc.font.draw(pose, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+							mc.font.draw(pose, biomeName, Configuration.posX() - length, Configuration.posY(), Configuration.color() | (alpha << 24));
 						else
-							mc.font.drawShadow(pose, biomeName, Configuration.posX(), Configuration.posY(), Configuration.color() | (alpha << 24));
+							mc.font.drawShadow(pose, biomeName, Configuration.posX() - length, Configuration.posY(), Configuration.color() | (alpha << 24));
 
 						pose.popPose();
 					});
