@@ -38,4 +38,7 @@ public class BiomeInfoConfig implements ConfigData
 
 	@Comment("If true, hides the mod's info text when the debug screen (F3) is open.")
 	boolean hideOnDebugScreen = true;
+
+	@Comment("The text alignment of the biome info.")
+	TextAlignment textAlignment = TextAlignment.LEFT;
 }
