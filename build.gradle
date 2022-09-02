@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 
-version = '1.4'
+version = '1.5'
 group = 'bl4ckscor3.mod.biomeinfo'
 archivesBaseName = 'biomeinfo-1.18.2'
 
