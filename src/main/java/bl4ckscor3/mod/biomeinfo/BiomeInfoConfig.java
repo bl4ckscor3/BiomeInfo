@@ -6,8 +6,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "biomeinfo")
-public class BiomeInfoConfig implements ConfigData
-{
+public class BiomeInfoConfig implements ConfigData {
 	@Comment("true if the biome info should be shown, false otherwise")
 	boolean enabled = true;
 

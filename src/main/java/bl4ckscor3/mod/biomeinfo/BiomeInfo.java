@@ -12,8 +12,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.biome.Biome;
 
-public class BiomeInfo implements ClientModInitializer
-{
+public class BiomeInfo implements ClientModInitializer {
 	private BiomeInfoConfig config;
 	public static Biome previousBiome;
 	public static int displayTime = 0;
@@ -21,29 +20,24 @@ public class BiomeInfo implements ClientModInitializer
 	public static boolean fadingIn = false;
 
 	@Override
-	public void onInitializeClient()
-	{
+	public void onInitializeClient() {
 		AutoConfig.register(BiomeInfoConfig.class, JanksonConfigSerializer::new);
 		config = AutoConfig.getConfigHolder(BiomeInfoConfig.class).getConfig();
 		ClientTickEvents.START_CLIENT_TICK.register(client -> {
-			if(!fadingIn)
-			{
-				if(!config.fadeOut && alpha != 255)
+			if (!fadingIn) {
+				if (!config.fadeOut && alpha != 255)
 					alpha = 255;
-				else if(config.fadeOut)
-				{
-					if(displayTime > 0)
+				else if (config.fadeOut) {
+					if (displayTime > 0)
 						displayTime--;
-					else if(alpha > 0)
+					else if (alpha > 0)
 						alpha -= 10;
 				}
 			}
-			else //when fading in
-			{
+			else { //when fading in
 				alpha += 10;
 
-				if(alpha >= 255)
-				{
+				if (alpha >= 255) {
 					fadingIn = false;
 					displayTime = Math.max(0, config.displayTime);
 					alpha = 255;
@@ -51,39 +45,33 @@ public class BiomeInfo implements ClientModInitializer
 			}
 		});
 		HudRenderCallback.EVENT.register((pose, delta) -> {
-			if(config.enabled && (!config.hideOnDebugScreen || !Minecraft.getInstance().options.renderDebug))
-			{
+			if (config.enabled && (!config.hideOnDebugScreen || !Minecraft.getInstance().options.renderDebug)) {
 				Minecraft mc = Minecraft.getInstance();
 				BlockPos pos = mc.getCameraEntity().blockPosition();
 
-				if(mc.level != null && mc.level.isLoaded(pos))
-				{
+				if (mc.level != null && mc.level.isLoaded(pos)) {
 					Holder<Biome> biomeHolder = mc.level.getBiome(pos);
 
-					if(!biomeHolder.isBound())
+					if (!biomeHolder.isBound())
 						return;
 
 					Biome biome = biomeHolder.value();
 
-					if(previousBiome != biome)
-					{
+					if (previousBiome != biome) {
 						previousBiome = biome;
 
-						if(config.fadeIn)
-						{
+						if (config.fadeIn) {
 							displayTime = 0;
 							alpha = 0;
 							fadingIn = true;
 						}
-						else
-						{
+						else {
 							displayTime = Math.max(0, config.displayTime);
 							alpha = 255;
 						}
 					}
 
-					if(alpha > 0)
-					{
+					if (alpha > 0) {
 						biomeHolder.unwrapKey().ifPresent(key -> {
 							float scale = (float)config.scale;
 							Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
@@ -92,7 +80,7 @@ public class BiomeInfo implements ClientModInitializer
 							pose.pushPose();
 							pose.scale(scale, scale, scale);
 
-							if(!config.textShadow)
+							if (!config.textShadow)
 								mc.font.draw(pose, biomeName, config.posX - length, config.posY, config.color| (alpha << 24));
 							else
 								mc.font.drawShadow(pose, biomeName, config.posX - length, config.posY, config.color| (alpha << 24));
