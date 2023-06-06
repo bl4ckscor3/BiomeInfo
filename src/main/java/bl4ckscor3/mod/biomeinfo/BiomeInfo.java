@@ -1,5 +1,7 @@
 package bl4ckscor3.mod.biomeinfo;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -44,7 +46,7 @@ public class BiomeInfo implements ClientModInitializer {
 				}
 			}
 		});
-		HudRenderCallback.EVENT.register((pose, delta) -> {
+		HudRenderCallback.EVENT.register((graphics, delta) -> {
 			if (config.enabled && (!config.hideOnDebugScreen || !Minecraft.getInstance().options.renderDebug)) {
 				Minecraft mc = Minecraft.getInstance();
 				BlockPos pos = mc.getCameraEntity().blockPosition();
@@ -73,17 +75,18 @@ public class BiomeInfo implements ClientModInitializer {
 
 					if (alpha > 0) {
 						biomeHolder.unwrapKey().ifPresent(key -> {
-							float scale = (float)config.scale;
+							float scale = (float) config.scale;
 							Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
 							int length = config.textAlignment.getNegativeOffset(mc.font, biomeName);
+							PoseStack pose = graphics.pose();
 
 							pose.pushPose();
 							pose.scale(scale, scale, scale);
 
 							if (!config.textShadow)
-								mc.font.draw(pose, biomeName, config.posX - length, config.posY, config.color| (alpha << 24));
+								graphics.drawString(mc.font, biomeName, config.posX - length, config.posY, config.color | (alpha << 24), false);
 							else
-								mc.font.drawShadow(pose, biomeName, config.posX - length, config.posY, config.color| (alpha << 24));
+								graphics.drawString(mc.font, biomeName, config.posX - length, config.posY, config.color | (alpha << 24), true);
 
 							pose.popPose();
 						});
