@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -58,7 +59,7 @@ public class BiomeInfoRenderer {
 		}
 	}
 
-	public static void renderBiomeInfo(ForgeGui gui, PoseStack pose, float partialTicks, int width, int height) {
+	public static void renderBiomeInfo(ForgeGui gui, GuiGraphics guiGraphics, float partialTicks, int width, int height) {
 		if (complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().options.renderDebug)) {
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = mc.getCameraEntity().blockPosition();
@@ -90,15 +91,11 @@ public class BiomeInfoRenderer {
 						float scale = (float) Configuration.scale();
 						Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
 						int length = Configuration.textAlignment().getNegativeOffset(mc.font, biomeName);
+						PoseStack pose = guiGraphics.pose();
 
 						pose.pushPose();
 						pose.scale(scale, scale, scale);
-
-						if (!Configuration.textShadow())
-							mc.font.draw(pose, biomeName, Configuration.posX() - length, Configuration.posY(), Configuration.color() | (alpha << 24));
-						else
-							mc.font.drawShadow(pose, biomeName, Configuration.posX() - length, Configuration.posY(), Configuration.color() | (alpha << 24));
-
+						guiGraphics.drawString(mc.font, biomeName, Configuration.posX() - length, Configuration.posY(), Configuration.color() | (alpha << 24), Configuration.textShadow());
 						pose.popPose();
 					});
 				}
