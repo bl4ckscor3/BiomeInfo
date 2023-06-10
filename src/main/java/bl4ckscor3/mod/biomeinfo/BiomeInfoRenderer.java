@@ -20,9 +20,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
-@EventBusSubscriber(modid=BiomeInfo.MODID, value=Dist.CLIENT, bus=Bus.MOD)
-public class BiomeInfoRenderer
-{
+@EventBusSubscriber(modid = BiomeInfo.MODID, value = Dist.CLIENT, bus = Bus.MOD)
+public class BiomeInfoRenderer {
 	public static final IGuiOverlay OVERLAY = BiomeInfoRenderer::renderBiomeInfo;
 	public static Biome previousBiome;
 	public static int displayTime = 0;
@@ -34,19 +33,15 @@ public class BiomeInfoRenderer
 		MinecraftForge.EVENT_BUS.addListener(BiomeInfoRenderer::onClientTick);
 	}
 
-	public static void onClientTick(ClientTickEvent event)
-	{
-		if(complete)
-		{
-			if(!fadingIn)
-			{
-				if(!Configuration.fadeOut() && alpha != 255)
+	public static void onClientTick(ClientTickEvent event) {
+		if (complete) {
+			if (!fadingIn) {
+				if (!Configuration.fadeOut() && alpha != 255)
 					alpha = 255;
-				else if(Configuration.fadeOut())
-				{
-					if(displayTime > 0)
+				else if (Configuration.fadeOut()) {
+					if (displayTime > 0)
 						displayTime--;
-					else if(alpha > 0)
+					else if (alpha > 0)
 						alpha -= 10;
 				}
 			}
@@ -54,8 +49,7 @@ public class BiomeInfoRenderer
 			{
 				alpha += 10;
 
-				if(alpha >= 255)
-				{
+				if (alpha >= 255) {
 					fadingIn = false;
 					displayTime = Configuration.displayTime();
 					alpha = 255;
@@ -64,50 +58,43 @@ public class BiomeInfoRenderer
 		}
 	}
 
-	public static void renderBiomeInfo(ForgeGui gui, PoseStack pose, float partialTicks, int width, int height)
-	{
-		if(complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().options.renderDebug))
-		{
+	public static void renderBiomeInfo(ForgeGui gui, PoseStack pose, float partialTicks, int width, int height) {
+		if (complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().options.renderDebug)) {
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = mc.getCameraEntity().blockPosition();
 
-			if(mc.level != null && mc.level.isLoaded(pos))
-			{
+			if (mc.level != null && mc.level.isLoaded(pos)) {
 				Holder<Biome> biomeHolder = mc.level.getBiome(pos);
 
-				if(!biomeHolder.isBound())
+				if (!biomeHolder.isBound())
 					return;
 
 				Biome biome = biomeHolder.value();
 
-				if(previousBiome != biome)
-				{
+				if (previousBiome != biome) {
 					previousBiome = biome;
 
-					if(Configuration.fadeIn())
-					{
+					if (Configuration.fadeIn()) {
 						displayTime = 0;
 						alpha = 0;
 						fadingIn = true;
 					}
-					else
-					{
+					else {
 						displayTime = Configuration.displayTime();
 						alpha = 255;
 					}
 				}
 
-				if(alpha > 0)
-				{
+				if (alpha > 0) {
 					biomeHolder.unwrapKey().ifPresent(key -> {
-						float scale = (float)Configuration.scale();
+						float scale = (float) Configuration.scale();
 						Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
 						int length = Configuration.textAlignment().getNegativeOffset(mc.font, biomeName);
 
 						pose.pushPose();
 						pose.scale(scale, scale, scale);
 
-						if(!Configuration.textShadow())
+						if (!Configuration.textShadow())
 							mc.font.draw(pose, biomeName, Configuration.posX() - length, Configuration.posY(), Configuration.color() | (alpha << 24));
 						else
 							mc.font.drawShadow(pose, biomeName, Configuration.posX() - length, Configuration.posY(), Configuration.color() | (alpha << 24));
@@ -120,14 +107,12 @@ public class BiomeInfoRenderer
 	}
 
 	@SubscribeEvent
-	public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event)
-	{
+	public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
 		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), "overlay", OVERLAY);
 	}
 
 	@SubscribeEvent
-	public static void onLoadComplete(FMLLoadCompleteEvent event)
-	{
+	public static void onLoadComplete(FMLLoadCompleteEvent event) {
 		complete = true;
 	}
 }

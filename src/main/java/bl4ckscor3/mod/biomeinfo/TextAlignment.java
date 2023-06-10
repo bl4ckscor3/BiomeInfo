@@ -5,21 +5,18 @@ import java.util.function.BiFunction;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
-public enum TextAlignment
-{
+public enum TextAlignment {
 	LEFT((font, component) -> 0),
 	MIDDLE((font, component) -> font.width(component) / 2),
 	RIGHT((font, component) -> font.width(component));
 
-	private final BiFunction<Font,Component,Integer> negativeOffset;
+	private final BiFunction<Font, Component, Integer> negativeOffset;
 
-	TextAlignment(BiFunction<Font,Component,Integer> offset)
-	{
+	TextAlignment(BiFunction<Font, Component, Integer> offset) {
 		this.negativeOffset = offset;
 	}
 
-	public int getNegativeOffset(Font font, Component biomeName)
-	{
+	public int getNegativeOffset(Font font, Component biomeName) {
 		return negativeOffset.apply(font, biomeName);
 	}
 }
