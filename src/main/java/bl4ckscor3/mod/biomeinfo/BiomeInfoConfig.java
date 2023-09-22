@@ -7,6 +7,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "biomeinfo")
 public class BiomeInfoConfig implements ConfigData {
+	//@formatter:off
 	@Comment("true if the biome info should be shown, false otherwise")
 	boolean enabled = true;
 

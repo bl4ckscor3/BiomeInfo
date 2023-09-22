@@ -47,7 +47,7 @@ public class BiomeInfo implements ClientModInitializer {
 			}
 		});
 		HudRenderCallback.EVENT.register((graphics, delta) -> {
-			if (config.enabled && (!config.hideOnDebugScreen || !Minecraft.getInstance().options.renderDebug)) {
+			if (config.enabled && (!config.hideOnDebugScreen || !Minecraft.getInstance().getDebugOverlay().showDebugScreen())) {
 				Minecraft mc = Minecraft.getInstance();
 				BlockPos pos = mc.getCameraEntity().blockPosition();
 
@@ -82,12 +82,7 @@ public class BiomeInfo implements ClientModInitializer {
 
 							pose.pushPose();
 							pose.scale(scale, scale, scale);
-
-							if (!config.textShadow)
-								graphics.drawString(mc.font, biomeName, config.posX - length, config.posY, config.color | (alpha << 24), false);
-							else
-								graphics.drawString(mc.font, biomeName, config.posX - length, config.posY, config.color | (alpha << 24), true);
-
+							graphics.drawString(mc.font, biomeName, config.posX - length, config.posY, config.color | (alpha << 24), config.textShadow);
 							pose.popPose();
 						});
 					}
