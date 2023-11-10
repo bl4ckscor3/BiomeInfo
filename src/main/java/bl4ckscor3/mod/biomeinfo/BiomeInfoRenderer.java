@@ -9,17 +9,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.fml.common.Mod.EventBusSubscriber.Bus;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent.ClientTickEvent;
 
 @EventBusSubscriber(modid = BiomeInfo.MODID, value = Dist.CLIENT, bus = Bus.MOD)
 public class BiomeInfoRenderer {
@@ -31,7 +31,7 @@ public class BiomeInfoRenderer {
 	public static boolean fadingIn = false;
 
 	static {
-		MinecraftForge.EVENT_BUS.addListener(BiomeInfoRenderer::onClientTick);
+		NeoForge.EVENT_BUS.addListener(BiomeInfoRenderer::onClientTick);
 	}
 
 	public static void onClientTick(ClientTickEvent event) {
@@ -46,8 +46,7 @@ public class BiomeInfoRenderer {
 						alpha -= 10;
 				}
 			}
-			else //when fading in
-			{
+			else { //when fading in
 				alpha += 10;
 
 				if (alpha >= 255) {
@@ -59,8 +58,8 @@ public class BiomeInfoRenderer {
 		}
 	}
 
-	public static void renderBiomeInfo(ForgeGui gui, GuiGraphics guiGraphics, float partialTicks, int width, int height) {
-		if (complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().options.renderDebug)) {
+	public static void renderBiomeInfo(ExtendedGui gui, GuiGraphics guiGraphics, float partialTicks, int width, int height) {
+		if (complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().getDebugOverlay().showDebugScreen())) {
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = mc.getCameraEntity().blockPosition();
 
