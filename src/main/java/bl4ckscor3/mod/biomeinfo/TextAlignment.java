@@ -1,9 +1,9 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import java.util.function.BiFunction;
-
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+
+import java.util.function.BiFunction;
 
 public enum TextAlignment {
 	LEFT((font, component) -> 0),
