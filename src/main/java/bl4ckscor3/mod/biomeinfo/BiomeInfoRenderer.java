@@ -113,7 +113,7 @@ public class BiomeInfoRenderer {
 
 	@SubscribeEvent
 	public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), BiomeInfo.MODID + ":overlay", OVERLAY);
+		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), "overlay", OVERLAY);
 	}
 
 	@SubscribeEvent
