@@ -11,17 +11,18 @@ import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 public class Configuration {
 	public static final ForgeConfigSpec CONFIG_SPEC;
 	private static final Configuration CONFIG;
-	public final BooleanValue enabled;
-	public final BooleanValue fadeOut;
-	public final BooleanValue fadeIn;
-	public final IntValue displayTime;
-	public final IntValue posX;
-	public final IntValue posY;
-	public final DoubleValue scale;
-	public final BooleanValue textShadow;
-	public final IntValue color;
-	public final BooleanValue hideOnDebugScreen;
-	public final EnumValue<TextAlignment> textAlignment;
+	private final BooleanValue enabled;
+	private final BooleanValue fadeOut;
+	private final BooleanValue fadeIn;
+	private final IntValue displayTime;
+	private final IntValue posX;
+	private final IntValue posY;
+	private final DoubleValue scale;
+	private final BooleanValue textShadow;
+	private final IntValue color;
+	private final BooleanValue hideOnDebugScreen;
+	private final EnumValue<TextAlignment> textAlignment;
+	private final EnumValue<PositionPreset> positionPreset;
 
 	static {
 		Pair<Configuration, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Configuration::new);
@@ -46,10 +47,10 @@ public class Configuration {
 				.defineInRange("displayTime", 30, 0, Integer.MAX_VALUE);
 		posX = builder
 				.comment("The X position to display the biome info at")
-				.defineInRange("posX", 3, Integer.MIN_VALUE, Integer.MAX_VALUE);
+				.defineInRange("posX", BiomeInfoRenderer.MARGIN, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		posY = builder
 				.comment("The Y position to display the biome info at")
-				.defineInRange("posY", 3, Integer.MIN_VALUE, Integer.MAX_VALUE);
+				.defineInRange("posY", BiomeInfoRenderer.MARGIN, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		scale = builder
 				.comment("The size of the biome info (multiplier)")
 				.defineInRange("scale", 1.0D, 0.0D, Double.MAX_VALUE);
@@ -65,6 +66,10 @@ public class Configuration {
 		textAlignment = builder
 				.comment("The text alignment of the biome info.")
 				.defineEnum("textAlignment", TextAlignment.LEFT);
+		positionPreset = builder
+				.comment("This lets BiomeInfo automatically determine the correct position of the text without needing to change the posX, posY, or textAlignment configuration settings manually.",
+						"If this is set to NONE, then BiomeInfo will use those configuration settings. If this is set to anything other than NONE, they will be ignored.")
+				.defineEnum("positionPreset", PositionPreset.TOP_LEFT);
 		//@formatter:on
 	}
 
@@ -110,5 +115,9 @@ public class Configuration {
 
 	public static TextAlignment textAlignment() {
 		return CONFIG.textAlignment.get();
+	}
+
+	public static PositionPreset positionPreset() {
+		return CONFIG.positionPreset.get();
 	}
 }
