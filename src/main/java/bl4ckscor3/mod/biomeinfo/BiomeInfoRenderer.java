@@ -1,12 +1,14 @@
 package bl4ckscor3.mod.biomeinfo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -32,6 +34,8 @@ public class BiomeInfoRenderer {
 	static {
 		NeoForge.EVENT_BUS.addListener(BiomeInfoRenderer::onClientTick);
 	}
+
+	private BiomeInfoRenderer() {}
 
 	public static void onClientTick(ClientTickEvent event) {
 		if (complete) {
@@ -103,7 +107,7 @@ public class BiomeInfoRenderer {
 
 	@SubscribeEvent
 	public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), "overlay", OVERLAY);
+		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), new ResourceLocation(BiomeInfo.MODID, "overlay"), OVERLAY);
 	}
 
 	@SubscribeEvent
