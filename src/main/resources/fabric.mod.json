@@ -14,7 +14,7 @@
     "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/fabric/1.19"
   },
 
-  "license": "GPL-3.0",
+  "license": "MIT",
   "icon": "assets/biomeinfo/icon.png",
 
   "environment": "client",
