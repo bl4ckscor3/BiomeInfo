@@ -82,12 +82,7 @@ public class BiomeInfo implements ClientModInitializer {
 
 							pose.pushPose();
 							pose.scale(scale, scale, scale);
-
-							if (!config.textShadow)
-								graphics.drawString(mc.font, biomeName, config.posX - length, config.posY, config.color | (alpha << 24), false);
-							else
-								graphics.drawString(mc.font, biomeName, config.posX - length, config.posY, config.color | (alpha << 24), true);
-
+							graphics.drawString(mc.font, biomeName, config.posX - length, config.posY, config.color | (alpha << 24), config.textShadow);
 							pose.popPose();
 						});
 					}
