@@ -1,14 +1,14 @@
 modLoader="javafml"
 loaderVersion="[46,)"
-license="MIT https://github.com/bl4ckscor3/BiomeInfo/blob/1.20/LICENSE"
+license="MIT https://github.com/bl4ckscor3/BiomeInfo/blob/forge/1.20/LICENSE"
 
 [[mods]]
 	modId="biomeinfo"
 	version="${file.jarVersion}"
 	displayName="BiomeInfo"
 	description='''Displays the name of the current biome on screen.'''
-	issueTrackerURL="http://github.com/bl4ckscor3/BiomeInfo/issues"
-	displayURL="http://minecraft.curseforge.com/projects/biomeinfo"
+	issueTrackerURL="https://github.com/bl4ckscor3/BiomeInfo/issues"
+	displayURL="https://www.curseforge.com/minecraft/mc-mods/biomeinfo"
 	authors="bl4ckscor3"
 
 [[dependencies.biomeinfo]]
