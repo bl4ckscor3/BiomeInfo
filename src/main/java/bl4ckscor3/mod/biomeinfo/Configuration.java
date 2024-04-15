@@ -8,11 +8,9 @@ import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
-public class Configuration
-{
+public class Configuration {
 	public static final ForgeConfigSpec CONFIG_SPEC;
 	private static final Configuration CONFIG;
-
 	public final BooleanValue enabled;
 	public final BooleanValue fadeOut;
 	public final BooleanValue fadeIn;
@@ -25,16 +23,15 @@ public class Configuration
 	public final BooleanValue hideOnDebugScreen;
 	public final EnumValue<TextAlignment> textAlignment;
 
-	static
-	{
-		Pair<Configuration,ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Configuration::new);
+	static {
+		Pair<Configuration, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Configuration::new);
 
 		CONFIG_SPEC = specPair.getRight();
 		CONFIG = specPair.getLeft();
 	}
 
-	Configuration(ForgeConfigSpec.Builder builder)
-	{
+	Configuration(ForgeConfigSpec.Builder builder) {
+		//@formatter:off
 		enabled = builder
 				.comment("true if the biome info should be shown, false otherwise")
 				.define("enabled", true);
@@ -68,60 +65,50 @@ public class Configuration
 		textAlignment = builder
 				.comment("The text alignment of the biome info.")
 				.defineEnum("textAlignment", TextAlignment.LEFT);
+		//@formatter:on
 	}
 
-	public static boolean enabled()
-	{
+	public static boolean enabled() {
 		return CONFIG.enabled.get();
 	}
 
-	public static boolean fadeOut()
-	{
+	public static boolean fadeOut() {
 		return CONFIG.fadeOut.get();
 	}
 
-	public static boolean fadeIn()
-	{
+	public static boolean fadeIn() {
 		return CONFIG.fadeIn.get();
 	}
 
-	public static int displayTime()
-	{
+	public static int displayTime() {
 		return CONFIG.displayTime.get();
 	}
 
-	public static int posX()
-	{
+	public static int posX() {
 		return CONFIG.posX.get();
 	}
 
-	public static int posY()
-	{
+	public static int posY() {
 		return CONFIG.posY.get();
 	}
 
-	public static double scale()
-	{
+	public static double scale() {
 		return CONFIG.scale.get();
 	}
 
-	public static boolean textShadow()
-	{
+	public static boolean textShadow() {
 		return CONFIG.textShadow.get();
 	}
 
-	public static int color()
-	{
+	public static int color() {
 		return CONFIG.color.get();
 	}
 
-	public static boolean hideOnDebugScreen()
-	{
+	public static boolean hideOnDebugScreen() {
 		return CONFIG.hideOnDebugScreen.get();
 	}
 
-	public static TextAlignment textAlignment()
-	{
+	public static TextAlignment textAlignment() {
 		return CONFIG.textAlignment.get();
 	}
 }
