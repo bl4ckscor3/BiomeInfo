@@ -1,18 +1,18 @@
 package bl4ckscor3.mod.biomeinfo;
 
+import java.util.function.BiFunction;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-
-import java.util.function.BiFunction;
 
 public enum TextAlignment {
 	LEFT((font, component) -> 0),
 	MIDDLE((font, component) -> font.width(component) / 2),
-	RIGHT((font, component) -> font.width(component));
+	RIGHT(Font::width);
 
-	private final BiFunction<Font,Component,Integer> negativeOffset;
+	private final BiFunction<Font, Component, Integer> negativeOffset;
 
-	TextAlignment(BiFunction<Font,Component,Integer> offset) {
+	TextAlignment(BiFunction<Font, Component, Integer> offset) {
 		negativeOffset = offset;
 	}
 
