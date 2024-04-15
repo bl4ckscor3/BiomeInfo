@@ -10,7 +10,7 @@ version = '1.6'
 group = 'bl4ckscor3.mod.biomeinfo'
 
 base {
-	archivesName = 'biomeinfo-1.20'
+	archivesName = 'biomeinfo-1.20.1'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
