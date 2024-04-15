@@ -1,5 +1,6 @@
 package bl4ckscor3.mod.biomeinfo;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.Util;
@@ -24,6 +25,7 @@ import net.neoforged.neoforge.event.TickEvent.ClientTickEvent;
 
 @EventBusSubscriber(modid = BiomeInfo.MODID, value = Dist.CLIENT, bus = Bus.MOD)
 public class BiomeInfoRenderer {
+	public static final int MARGIN = 3;
 	public static final IGuiOverlay OVERLAY = BiomeInfoRenderer::renderBiomeInfo;
 	public static Biome previousBiome;
 	public static int displayTime = 0;
@@ -92,12 +94,14 @@ public class BiomeInfoRenderer {
 					biomeHolder.unwrapKey().ifPresent(key -> {
 						float scale = (float) Configuration.scale();
 						Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
-						int length = Configuration.textAlignment().getNegativeOffset(mc.font, biomeName);
+						PositionPreset positionPreset = Configuration.positionPreset();
+						int textOffset = positionPreset.textAlignment().getNegativeOffset(mc.font, biomeName);
 						PoseStack pose = guiGraphics.pose();
+						Window window = mc.getWindow();
 
 						pose.pushPose();
 						pose.scale(scale, scale, scale);
-						guiGraphics.drawString(mc.font, biomeName, Configuration.posX() - length, Configuration.posY(), Configuration.color() | (alpha << 24), Configuration.textShadow());
+						guiGraphics.drawString(mc.font, biomeName, positionPreset.posX(window) - textOffset, positionPreset.posY(window, mc.font), Configuration.color() | (alpha << 24), Configuration.textShadow());
 						pose.popPose();
 					});
 				}

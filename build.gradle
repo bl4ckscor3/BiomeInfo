@@ -5,7 +5,7 @@ plugins {
 	id 'net.neoforged.gradle.userdev' version '[7.0,7.1)'
 }
 
-version = '1.5'
+version = '1.6'
 group = 'bl4ckscor3.mod.biomeinfo'
 
 base {
@@ -22,9 +22,18 @@ runs {
         modSource project.sourceSets.main
     }
 }
+repositories {
+	maven {
+		url "https://cursemaven.com/"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
+}
 
 dependencies {
 	implementation 'net.neoforged:neoforge:20.4.232'
+	implementation "curse.maven:configured-457570:5105024"
 }
 
 tasks.named('jar', Jar).configure {
