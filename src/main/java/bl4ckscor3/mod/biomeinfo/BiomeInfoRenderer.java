@@ -34,6 +34,8 @@ public class BiomeInfoRenderer {
 		MinecraftForge.EVENT_BUS.addListener(BiomeInfoRenderer::onClientTick);
 	}
 
+	private BiomeInfoRenderer() {}
+
 	public static void onClientTick(ClientTickEvent event) {
 		if (complete) {
 			if (!fadingIn) {
@@ -105,7 +107,7 @@ public class BiomeInfoRenderer {
 
 	@SubscribeEvent
 	public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), "overlay", OVERLAY);
+		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), BiomeInfo.MODID + ":overlay", OVERLAY);
 	}
 
 	@SubscribeEvent
