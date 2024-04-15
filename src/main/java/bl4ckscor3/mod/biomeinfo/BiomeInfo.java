@@ -13,11 +13,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.biome.Biome;
 
 public class BiomeInfo implements ClientModInitializer {
-	private BiomeInfoConfig config;
-	public static Biome previousBiome;
-	public static int displayTime = 0;
-	public static int alpha = 0;
-	public static boolean fadingIn = false;
+	static BiomeInfoConfig config;
+	private Biome previousBiome;
+	private int displayTime = 0;
+	private int alpha = 0;
+	private boolean fadingIn = false;
 
 	@Override
 	public void onInitializeClient() {
