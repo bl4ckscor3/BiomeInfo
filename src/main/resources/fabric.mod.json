@@ -11,7 +11,7 @@
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/biomeinfo-fabric",
     "issues": "https://github.com/bl4ckscor3/BiomeInfo/issues",
-    "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/1.20-fabric"
+    "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/fabric/1.20"
   },
 
   "license": "MIT",
