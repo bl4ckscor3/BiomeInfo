@@ -41,4 +41,8 @@ public class BiomeInfoConfig implements ConfigData {
 
 	@Comment("The text alignment of the biome info.")
 	TextAlignment textAlignment = TextAlignment.LEFT;
+
+	@Comment("This lets BiomeInfo automatically determine the correct position of the text without needing to change the posX, posY, or textAlignment configuration settings manually.\n" +
+			"If this is set to NONE, then BiomeInfo will use those configuration settings. If this is set to anything other than NONE, they will be ignored.")
+	PositionPreset positionPreset = PositionPreset.TOP_LEFT;
 }
