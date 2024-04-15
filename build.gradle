@@ -30,8 +30,18 @@ minecraft {
     }
 }
 
+repositories {
+	maven {
+		url "https://cursemaven.com/"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.19.4-45.1.0'
+    implementation fg.deobf("curse.maven:configured-457570:4462894")
 }
 
 jar {

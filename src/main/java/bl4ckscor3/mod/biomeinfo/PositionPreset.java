@@ -22,7 +22,12 @@ public enum PositionPreset {
 	BOTTOM_MIDDLE(window -> window.getGuiScaledWidth() / 2, (window, font) -> window.getGuiScaledHeight() - MARGIN - font.lineHeight, () -> TextAlignment.MIDDLE),
 	BOTTOM_RIGHT(window -> window.getGuiScaledWidth() - MARGIN, (window, font) -> window.getGuiScaledHeight() - MARGIN - font.lineHeight, () -> TextAlignment.RIGHT),
 	ABOVE_MIDDLE(window -> window.getGuiScaledWidth() / 2, (window, font) -> window.getGuiScaledHeight() / 4, () -> TextAlignment.MIDDLE),
-	ABOVE_HOTBAR(window -> window.getGuiScaledWidth() / 2, (window, font) -> window.getGuiScaledHeight() - 68, () -> TextAlignment.MIDDLE);
+	ABOVE_HOTBAR(window -> window.getGuiScaledWidth() / 2, (window, font) -> window.getGuiScaledHeight() - 68, () -> TextAlignment.MIDDLE),
+	LEFT_OF_CROSSHAIR(window -> window.getGuiScaledWidth() / 2 - MARGIN - 3, (window, font) -> window.getGuiScaledHeight() / 2 - font.lineHeight / 2, () -> TextAlignment.RIGHT),
+	RIGHT_OF_CROSSHAIR(window -> window.getGuiScaledWidth() / 2 + MARGIN + 3, (window, font) -> window.getGuiScaledHeight() / 2 - font.lineHeight / 2, () -> TextAlignment.LEFT),
+	ABOVE_CROSSHAIR(window -> window.getGuiScaledWidth() / 2, (window, font) -> window.getGuiScaledHeight() / 2 - MARGIN - 3 - font.lineHeight, () -> TextAlignment.MIDDLE),
+	UNDER_CROSSHAIR_WITH_ATTACK_INDICATOR(window -> window.getGuiScaledWidth() / 2, (window, font) -> window.getGuiScaledHeight() / 2 + MARGIN + 4 + font.lineHeight, () -> TextAlignment.MIDDLE),
+	UNDER_CROSSHAIR(window -> window.getGuiScaledWidth() / 2, (window, font) -> window.getGuiScaledHeight() / 2 + MARGIN + 3, () -> TextAlignment.MIDDLE);
 
 	private ToIntFunction<Window> xGetter;
 	private ToIntBiFunction<Window, Font> yGetter;
