@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 public enum TextAlignment {
 	LEFT((font, component) -> 0),
 	MIDDLE((font, component) -> font.width(component) / 2),
-	RIGHT((font, component) -> font.width(component));
+	RIGHT(Font::width);
 
 	private final BiFunction<Font, Component, Integer> negativeOffset;
 
