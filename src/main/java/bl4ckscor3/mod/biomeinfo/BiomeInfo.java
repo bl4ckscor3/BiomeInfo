@@ -1,5 +1,7 @@
 package bl4ckscor3.mod.biomeinfo;
 
+import com.mojang.blaze3d.platform.Window;
+
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -13,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.biome.Biome;
 
 public class BiomeInfo implements ClientModInitializer {
+	public static final int MARGIN = 3;
 	static BiomeInfoConfig config;
 	private Biome previousBiome;
 	private int displayTime = 0;
@@ -73,17 +76,19 @@ public class BiomeInfo implements ClientModInitializer {
 
 					if (alpha > 0) {
 						biomeHolder.unwrapKey().ifPresent(key -> {
-							float scale = (float)config.scale;
+							float scale = (float) config.scale;
 							Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
-							int length = config.textAlignment.getNegativeOffset(mc.font, biomeName);
+							PositionPreset positionPreset = config.positionPreset;
+							int textOffset = positionPreset.textAlignment().getNegativeOffset(mc.font, biomeName);
+							Window window = mc.getWindow();
 
 							pose.pushPose();
 							pose.scale(scale, scale, scale);
 
 							if (!config.textShadow)
-								mc.font.draw(pose, biomeName, config.posX - length, config.posY, config.color| (alpha << 24));
+								mc.font.draw(pose, biomeName, positionPreset.posX(window) - textOffset, positionPreset.posY(window, mc.font), config.color | (alpha << 24));
 							else
-								mc.font.drawShadow(pose, biomeName, config.posX - length, config.posY, config.color| (alpha << 24));
+								mc.font.drawShadow(pose, biomeName, positionPreset.posX(window) - textOffset, positionPreset.posY(window, mc.font), config.color | (alpha << 24));
 
 							pose.popPose();
 						});
