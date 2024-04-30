@@ -2,17 +2,17 @@ plugins {
 	id 'java-library'
 	id 'eclipse'
 	id 'idea'
-	id 'net.neoforged.gradle.userdev' version '[7.0,7.1)'
+	id 'net.neoforged.gradle.userdev' version '7.0.105'
 }
 
 version = '1.6'
 group = 'bl4ckscor3.mod.biomeinfo'
 
 base {
-	archivesName = 'biomeinfo-1.20.4'
+	archivesName = 'biomeinfo-1.20.6'
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 runs {
@@ -32,8 +32,8 @@ repositories {
 }
 
 dependencies {
-	implementation 'net.neoforged:neoforge:20.4.232'
-	implementation "curse.maven:configured-457570:5105024"
+	implementation 'net.neoforged:neoforge:20.6.6-beta'
+	implementation "curse.maven:configured-457570:5300382"
 }
 
 tasks.named('jar', Jar).configure {
@@ -49,4 +49,5 @@ tasks.named('jar', Jar).configure {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+	options.release = 21
 }

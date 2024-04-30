@@ -13,20 +13,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod.EventBusSubscriber;
-import net.neoforged.fml.common.Mod.EventBusSubscriber.Bus;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent.ClientTickEvent;
 
 @EventBusSubscriber(modid = BiomeInfo.MODID, value = Dist.CLIENT, bus = Bus.MOD)
 public class BiomeInfoRenderer {
 	public static final int MARGIN = 3;
-	public static final IGuiOverlay OVERLAY = BiomeInfoRenderer::renderBiomeInfo;
 	public static Biome previousBiome;
 	public static int displayTime = 0;
 	public static int alpha = 0;
@@ -39,7 +36,7 @@ public class BiomeInfoRenderer {
 
 	private BiomeInfoRenderer() {}
 
-	public static void onClientTick(ClientTickEvent event) {
+	public static void onClientTick(ClientTickEvent.Pre event) {
 		if (complete) {
 			if (!fadingIn) {
 				if (!Configuration.fadeOut() && alpha != 255)
@@ -63,7 +60,7 @@ public class BiomeInfoRenderer {
 		}
 	}
 
-	public static void renderBiomeInfo(ExtendedGui gui, GuiGraphics guiGraphics, float partialTicks, int width, int height) {
+	public static void renderBiomeInfo(GuiGraphics guiGraphics, float partialTicks) {
 		if (complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().getDebugOverlay().showDebugScreen())) {
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = mc.getCameraEntity().blockPosition();
@@ -110,8 +107,8 @@ public class BiomeInfoRenderer {
 	}
 
 	@SubscribeEvent
-	public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), new ResourceLocation(BiomeInfo.MODID, "overlay"), OVERLAY);
+	public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
+		event.registerAbove(VanillaGuiLayers.TITLE, new ResourceLocation(BiomeInfo.MODID, "overlay"), BiomeInfoRenderer::renderBiomeInfo);
 	}
 
 	@SubscribeEvent
