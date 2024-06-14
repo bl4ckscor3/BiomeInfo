@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.Util;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
@@ -60,7 +61,7 @@ public class BiomeInfoRenderer {
 		}
 	}
 
-	public static void renderBiomeInfo(GuiGraphics guiGraphics, float partialTicks) {
+	public static void renderBiomeInfo(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
 		if (complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().getDebugOverlay().showDebugScreen())) {
 			Minecraft mc = Minecraft.getInstance();
 			BlockPos pos = mc.getCameraEntity().blockPosition();
@@ -108,7 +109,7 @@ public class BiomeInfoRenderer {
 
 	@SubscribeEvent
 	public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
-		event.registerAbove(VanillaGuiLayers.TITLE, new ResourceLocation(BiomeInfo.MODID, "overlay"), BiomeInfoRenderer::renderBiomeInfo);
+		event.registerAbove(VanillaGuiLayers.TITLE, ResourceLocation.fromNamespaceAndPath(BiomeInfo.MODID, "overlay"), BiomeInfoRenderer::renderBiomeInfo);
 	}
 
 	@SubscribeEvent
