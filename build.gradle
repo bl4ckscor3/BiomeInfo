@@ -9,7 +9,7 @@ version = '1.6'
 group = 'bl4ckscor3.mod.biomeinfo'
 
 base {
-	archivesName = 'biomeinfo-1.21'
+	archivesName = 'biomeinfo-1.21.4'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -33,7 +33,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'net.neoforged:neoforge:21.0.2-beta'
+	implementation 'net.neoforged:neoforge:21.4.12-beta'
 //	implementation "curse.maven:configured-457570:5340194"
 }
 
