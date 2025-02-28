@@ -63,6 +63,17 @@ public class BiomeInfoRenderer {
 		}
 	}
 
+	private static String formatBiomeName(String biomeId) {
+		String[] words = biomeId.split("_");
+		StringBuilder formatted = new StringBuilder();
+
+		for (String word : words) {
+			formatted.append(word.substring(0, 1).toUpperCase()).append(word.substring(1)).append(" ");
+		}
+
+		return formatted.toString().trim();
+	}
+
 	public static void renderBiomeInfo(ForgeGui gui, GuiGraphics guiGraphics, float partialTicks, int width, int height) {
 		if (complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().options.renderDebug)) {
 			Minecraft mc = Minecraft.getInstance();
@@ -93,7 +104,17 @@ public class BiomeInfoRenderer {
 				if (alpha > 0) {
 					biomeHolder.unwrapKey().ifPresent(key -> {
 						float scale = (float) Configuration.scale();
-						Component biomeName = Component.translatable(Util.makeDescriptionId("biome", key.location()));
+
+						String translationKey = Util.makeDescriptionId("biome", key.location());
+						Component biomeName = Component.translatable(translationKey);
+
+						String displayedText = biomeName.getString();
+						if (displayedText.equals(translationKey)) {
+							String biomeId = key.location().getPath(); // just path part (like "birch_forest")
+							String formattedBiomeName = formatBiomeName(biomeId);
+							biomeName = Component.literal(formattedBiomeName);
+						}
+
 						PositionPreset positionPreset = Configuration.positionPreset();
 						int textOffset = positionPreset.textAlignment().getNegativeOffset(mc.font, biomeName);
 						PoseStack pose = guiGraphics.pose();
