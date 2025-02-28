@@ -5,6 +5,7 @@
 /.classpath
 /.gradle
 /run
+/runs
 *.launch
 /.settings
 /logs
