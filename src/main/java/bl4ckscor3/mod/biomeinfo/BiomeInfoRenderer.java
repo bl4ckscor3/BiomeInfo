@@ -1,5 +1,11 @@
 package bl4ckscor3.mod.biomeinfo;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -10,6 +16,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.neoforged.api.distmarker.Dist;
@@ -18,6 +25,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
@@ -30,6 +38,7 @@ public class BiomeInfoRenderer {
 	public static int alpha = 0;
 	public static boolean complete = false;
 	public static boolean fadingIn = false;
+	public static final Map<ResourceKey<Biome>, Component> NAME_CACHE = new HashMap<>();
 
 	static {
 		NeoForge.EVENT_BUS.addListener(BiomeInfoRenderer::onClientTick);
@@ -61,17 +70,6 @@ public class BiomeInfoRenderer {
 		}
 	}
 
-	private static String formatBiomeName(String biomeId) {
-		String[] words = biomeId.split("_");
-		StringBuilder formatted = new StringBuilder();
-
-		for (String word : words) {
-			formatted.append(word.substring(0, 1).toUpperCase()).append(word.substring(1)).append(" ");
-		}
-
-		return formatted.toString().trim();
-	}
-
 	public static void renderBiomeInfo(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
 		if (complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().getDebugOverlay().showDebugScreen())) {
 			Minecraft mc = Minecraft.getInstance();
@@ -101,18 +99,8 @@ public class BiomeInfoRenderer {
 
 				if (alpha > 0) {
 					biomeHolder.unwrapKey().ifPresent(key -> {
+						Component biomeName = getBiomeName(key);
 						float scale = (float) Configuration.scale();
-
-						String translationKey = Util.makeDescriptionId("biome", key.location());
-						Component biomeName = Component.translatable(translationKey);
-
-						String displayedText = biomeName.getString();
-						if (displayedText.equals(translationKey)) {
-							String biomeId = key.location().getPath(); // just path part (like "birch_forest")
-							String formattedBiomeName = formatBiomeName(biomeId);
-							biomeName = Component.literal(formattedBiomeName);
-						}
-
 						PositionPreset positionPreset = Configuration.positionPreset();
 						int textOffset = positionPreset.textAlignment().getNegativeOffset(mc.font, biomeName);
 						PoseStack pose = guiGraphics.pose();
@@ -126,6 +114,39 @@ public class BiomeInfoRenderer {
 				}
 			}
 		}
+	}
+
+	private static Component getBiomeName(ResourceKey<Biome> key) {
+		return NAME_CACHE.computeIfAbsent(key, k -> {
+			String translationKey = Util.makeDescriptionId("biome", key.location());
+			Component biomeName = Component.translatable(translationKey);
+			String displayedText = biomeName.getString();
+
+			if (displayedText.equals(translationKey)) {
+				String biomePath = key.location().getPath(); //e.g. "birch_forest"
+				String formattedBiomeName = formatBiomeName(biomePath);
+
+				return Component.literal(formattedBiomeName);
+			}
+
+			return biomeName;
+		});
+	}
+
+	private static String formatBiomeName(String biomePath) {
+		String[] words = biomePath.split("_");
+		StringBuilder formatted = new StringBuilder();
+
+		for (String word : words) {
+			formatted.append(StringUtils.capitalize(word)).append(" ");
+		}
+
+		return formatted.toString().trim();
+	}
+
+	@SubscribeEvent
+	public static void onResourceManagerReload(RegisterClientReloadListenersEvent event) {
+		event.registerReloadListener((barrier, manager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) -> CompletableFuture.runAsync(NAME_CACHE::clear, backgroundExecutor).thenCompose(barrier::wait));
 	}
 
 	@SubscribeEvent
