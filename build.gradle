@@ -33,7 +33,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'net.neoforged:neoforge:21.4.12-beta'
+	implementation 'net.neoforged:neoforge:21.4.99-beta'
 //	implementation "curse.maven:configured-457570:5340194"
 }
 
