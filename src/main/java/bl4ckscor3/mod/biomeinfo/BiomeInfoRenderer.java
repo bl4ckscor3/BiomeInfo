@@ -107,7 +107,7 @@ public class BiomeInfoRenderer {
 						Component biomeName = Component.translatable(translationKey);
 
 						String displayedText = biomeName.getString();
-						if (displayedText.equals(translationKey))
+						if (displayedText.equals(translationKey)) {
 							String biomeId = key.location().getPath(); // just path part (like "birch_forest")
 							String formattedBiomeName = formatBiomeName(biomeId);
 							biomeName = Component.literal(formattedBiomeName);
