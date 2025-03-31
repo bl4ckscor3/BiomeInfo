@@ -10,6 +10,9 @@
   "text.autoconfig.biomeinfo.option.textShadow": "Text shadow",
   "text.autoconfig.biomeinfo.option.color": "Text color",
   "text.autoconfig.biomeinfo.option.hideOnDebugScreen": "Hide text on debug screen (F3)",
+  "text.autoconfig.biomeinfo.option.hideWithUI": "Hide text when UI is hidden (F1)",
+  "text.autoconfig.biomeinfo.option.fallbackOnUntranslatableName": "Fallback on untranslatable biome name",
+  "text.autoconfig.biomeinfo.option.appendModName": "Append mod name to biome name",
   "text.autoconfig.biomeinfo.option.textAlignment": "Text Alignment",
   "text.autoconfig.biomeinfo.option.positionPreset": "Position Preset"
 }
