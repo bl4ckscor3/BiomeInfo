@@ -5,7 +5,7 @@ plugins {
 	id 'net.neoforged.gradle.userdev' version '7.0.105'
 }
 
-version = '1.6.1'
+version = '1.7'
 group = 'bl4ckscor3.mod.biomeinfo'
 
 base {
