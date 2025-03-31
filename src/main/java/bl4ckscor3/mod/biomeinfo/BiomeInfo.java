@@ -17,15 +17,20 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.biome.Biome;
 
 public class BiomeInfo implements ClientModInitializer, IdentifiableResourceReloadListener {
@@ -63,8 +68,12 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 			}
 		});
 		HudRenderCallback.EVENT.register((graphics, delta) -> {
-			if (config.enabled && (!config.hideOnDebugScreen || !Minecraft.getInstance().getDebugOverlay().showDebugScreen())) {
+			if (config.enabled) {
 				Minecraft mc = Minecraft.getInstance();
+
+				if (hideBecauseOfF1(mc) || hideBecauseOfF3(mc))
+					return;
+
 				BlockPos pos = mc.getCameraEntity().blockPosition();
 
 				if (mc.level != null && mc.level.isLoaded(pos)) {
@@ -112,22 +121,42 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 
 	private static Component getBiomeName(ResourceKey<Biome> key) {
 		return NAME_CACHE.computeIfAbsent(key, k -> {
-			String translationKey = Util.makeDescriptionId("biome", key.location());
-			Component biomeName = Component.translatable(translationKey);
-			String displayedText = biomeName.getString();
+			ResourceLocation location = key.location();
+			String translationKey = Util.makeDescriptionId("biome", location);
+			MutableComponent biomeName = Component.translatable(translationKey);
+			MutableComponent displayName = biomeName;
 
-			if (displayedText.equals(translationKey)) {
-				String biomePath = key.location().getPath(); //e.g. "birch_forest"
-				String formattedBiomeName = formatBiomeName(biomePath);
+			if (config.fallbackOnUntranslatableName) {
+				String displayedText = biomeName.getString();
 
-				return Component.literal(formattedBiomeName);
+				if (displayedText.equals(translationKey)) {
+					String biomePath = key.location().getPath(); //e.g. "birch_forest"
+					String formattedBiomeName = snakeCaseToEnglish(biomePath);
+
+					displayName = Component.literal(formattedBiomeName);
+				}
 			}
 
-			return biomeName;
+			if (config.appendModName) {
+				String modName = getModName(location);
+
+				if (modName != null)
+					displayName = displayName.append(Component.literal(String.format(" (%s)", modName)));
+			}
+
+			return displayName;
 		});
 	}
 
-	private static String formatBiomeName(String biomePath) {
+	private static boolean hideBecauseOfF1(Minecraft mc) {
+		return mc.options.hideGui && config.hideWithUI;
+	}
+
+	private static boolean hideBecauseOfF3(Minecraft mc) {
+		return mc.getDebugOverlay().showDebugScreen() && config.hideOnDebugScreen;
+	}
+
+	private static String snakeCaseToEnglish(String biomePath) {
 		String[] words = biomePath.split("_");
 		StringBuilder formatted = new StringBuilder();
 
@@ -136,6 +165,20 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 		}
 
 		return formatted.toString().trim();
+	}
+
+	private static String getModName(ResourceLocation location) {
+		String namespace = location.getNamespace();
+
+		//@formatter:off
+		return FabricLoader.getInstance().getAllMods()
+				.stream()
+				.map(ModContainer::getMetadata)
+				.filter(meta -> meta.getId().equals(namespace))
+				.findFirst()
+				.map(ModMetadata::getName)
+				.orElseGet(() -> snakeCaseToEnglish(namespace));
+		//@formatter:on
 	}
 
 	@Override
