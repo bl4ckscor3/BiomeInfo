@@ -11,6 +11,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -31,6 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.biome.Biome;
 
 public class BiomeInfo implements ClientModInitializer, IdentifiableResourceReloadListener {
@@ -45,7 +47,12 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 	@Override
 	public void onInitializeClient() {
 		AutoConfig.register(BiomeInfoConfig.class, JanksonConfigSerializer::new);
-		config = AutoConfig.getConfigHolder(BiomeInfoConfig.class).getConfig();
+		ConfigHolder<BiomeInfoConfig> configHolder = AutoConfig.getConfigHolder(BiomeInfoConfig.class);
+		configHolder.registerSaveListener((holder, config) -> {
+			NAME_CACHE.clear();
+			return InteractionResult.SUCCESS;
+		});
+		config = configHolder.getConfig();
 		ClientTickEvents.START_CLIENT_TICK.register(client -> {
 			if (!fadingIn) {
 				if (!config.fadeOut && alpha != 255)
