@@ -23,6 +23,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.EventBusSubscriber.Bus;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.moddiscovery.ModInfo;
@@ -189,6 +190,12 @@ public class BiomeInfoRenderer {
 	@SubscribeEvent
 	public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
 		event.registerAbove(VanillaGuiLayers.TITLE, new ResourceLocation(BiomeInfo.MODID, "overlay"), BiomeInfoRenderer::renderBiomeInfo);
+	}
+
+	@SubscribeEvent
+	public static void onConfigChange(ModConfigEvent event) {
+		if (event.getConfig().getSpec() == Configuration.CONFIG_SPEC)
+			NAME_CACHE.clear();
 	}
 
 	@SubscribeEvent
