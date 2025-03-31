@@ -38,6 +38,15 @@ public class BiomeInfoConfig implements ConfigData {
 	@Comment("If true, hides the mod's info text when the debug screen (F3) is open.")
 	boolean hideOnDebugScreen = true;
 
+	@Comment("If true, hides the mod's info text when the game's UI is also hidden (F1).")
+	boolean hideWithUI = true;
+
+	@Comment("If true, will automatically fromat biome names that do not have a proper translation into an English name.")
+	boolean fallbackOnUntranslatableName = true;
+
+	@Comment("If true, will append the mod name the biome is from to the biome name.")
+	boolean appendModName = false;
+
 	@Comment("The text alignment of the biome info.")
 	TextAlignment textAlignment = TextAlignment.LEFT;
 
