@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -24,6 +25,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.fml.loading.moddiscovery.ModInfo;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
@@ -71,8 +74,12 @@ public class BiomeInfoRenderer {
 	}
 
 	public static void renderBiomeInfo(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-		if (complete && Configuration.enabled() && (!Configuration.hideOnDebugScreen() || !Minecraft.getInstance().getDebugOverlay().showDebugScreen())) {
+		if (complete && Configuration.enabled()) {
 			Minecraft mc = Minecraft.getInstance();
+
+			if (hideBecauseOfF1(mc) || hideBecauseOfF3(mc))
+				return;
+
 			BlockPos pos = mc.getCameraEntity().blockPosition();
 
 			if (mc.level != null && mc.level.isLoaded(pos)) {
@@ -118,22 +125,42 @@ public class BiomeInfoRenderer {
 
 	private static Component getBiomeName(ResourceKey<Biome> key) {
 		return NAME_CACHE.computeIfAbsent(key, k -> {
-			String translationKey = Util.makeDescriptionId("biome", key.location());
-			Component biomeName = Component.translatable(translationKey);
-			String displayedText = biomeName.getString();
+			ResourceLocation location = key.location();
+			String translationKey = Util.makeDescriptionId("biome", location);
+			MutableComponent biomeName = Component.translatable(translationKey);
+			MutableComponent displayName = biomeName;
 
-			if (displayedText.equals(translationKey)) {
-				String biomePath = key.location().getPath(); //e.g. "birch_forest"
-				String formattedBiomeName = formatBiomeName(biomePath);
+			if (Configuration.fallbackOnUntranslatableName()) {
+				String displayedText = biomeName.getString();
 
-				return Component.literal(formattedBiomeName);
+				if (displayedText.equals(translationKey)) {
+					String biomePath = key.location().getPath(); //e.g. "birch_forest"
+					String formattedBiomeName = snakeCaseToEnglish(biomePath);
+
+					displayName = Component.literal(formattedBiomeName);
+				}
 			}
 
-			return biomeName;
+			if (Configuration.appendModName()) {
+				String modName = getModName(location);
+
+				if (modName != null)
+					displayName = displayName.append(Component.literal(String.format(" (%s)", modName)));
+			}
+
+			return displayName;
 		});
 	}
 
-	private static String formatBiomeName(String biomePath) {
+	private static boolean hideBecauseOfF1(Minecraft mc) {
+		return mc.options.hideGui && Configuration.hideWithUI();
+	}
+
+	private static boolean hideBecauseOfF3(Minecraft mc) {
+		return mc.getDebugOverlay().showDebugScreen() && Configuration.hideOnDebugScreen();
+	}
+
+	private static String snakeCaseToEnglish(String biomePath) {
 		String[] words = biomePath.split("_");
 		StringBuilder formatted = new StringBuilder();
 
@@ -142,6 +169,17 @@ public class BiomeInfoRenderer {
 		}
 
 		return formatted.toString().trim();
+	}
+
+	private static String getModName(ResourceLocation location) {
+		String namespace = location.getNamespace();
+
+		for (ModInfo info : FMLLoader.getLoadingModList().getMods()) {
+			if (info.getModId().equals(namespace))
+				return info.getDisplayName();
+		}
+
+		return snakeCaseToEnglish(namespace);
 	}
 
 	@SubscribeEvent
