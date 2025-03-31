@@ -21,6 +21,9 @@ public class Configuration {
 	private final BooleanValue textShadow;
 	private final IntValue color;
 	private final BooleanValue hideOnDebugScreen;
+	private final BooleanValue hideWithUI;
+	private final BooleanValue fallbackOnUntranslatableName;
+	private final BooleanValue appendModName;
 	private final EnumValue<TextAlignment> textAlignment;
 	private final EnumValue<PositionPreset> positionPreset;
 
@@ -63,6 +66,15 @@ public class Configuration {
 		hideOnDebugScreen = builder
 				.comment("If true, hides the mod's info text when the debug screen (F3) is open.")
 				.define("hideOnDebugScreen", true);
+		hideWithUI = builder
+				.comment("If true, hides the mod's info text when the game's UI is also hidden (F1).")
+				.define("hideWithUI", true);
+		fallbackOnUntranslatableName = builder
+				.comment("If true, will automatically fromat biome names that do not have a proper translation into an English name.")
+				.define("fallbackOnUntranslatableName", true);
+		appendModName = builder
+				.comment("If true, will append the mod name the biome is from to the biome name.")
+				.define("appendModName", false);
 		textAlignment = builder
 				.comment("The text alignment of the biome info.")
 				.defineEnum("textAlignment", TextAlignment.LEFT);
@@ -111,6 +123,18 @@ public class Configuration {
 
 	public static boolean hideOnDebugScreen() {
 		return CONFIG.hideOnDebugScreen.get();
+	}
+
+	public static boolean hideWithUI() {
+		return CONFIG.hideWithUI.get();
+	}
+
+	public static boolean fallbackOnUntranslatableName() {
+		return CONFIG.fallbackOnUntranslatableName.get();
+	}
+
+	public static boolean appendModName() {
+		return CONFIG.appendModName.get();
 	}
 
 	public static TextAlignment textAlignment() {
