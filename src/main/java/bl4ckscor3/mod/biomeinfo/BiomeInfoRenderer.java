@@ -30,6 +30,7 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
@@ -193,6 +194,12 @@ public class BiomeInfoRenderer {
 	@SubscribeEvent
 	public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
 		event.registerAbove(VanillaGuiOverlay.TITLE_TEXT.id(), "overlay", OVERLAY);
+	}
+
+	@SubscribeEvent
+	public static void onConfigChange(ModConfigEvent event) {
+		if (event.getConfig().getSpec() == Configuration.CONFIG_SPEC)
+			NAME_CACHE.clear();
 	}
 
 	@SubscribeEvent
