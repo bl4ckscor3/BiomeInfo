@@ -2,7 +2,7 @@ plugins {
 	id 'java-library'
 	id 'eclipse'
 	id 'idea'
-	id 'net.neoforged.gradle.userdev' version '7.0.+'
+	id 'net.neoforged.moddev' version '2.0.82'
 }
 
 version = '1.7'
@@ -15,26 +15,23 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
-runs {
-    client {
-	    workingDirectory project.file('run/client')
-        systemProperty 'forge.logging.console.level', 'debug'
-        modSource project.sourceSets.main
-    }
-}
+neoForge {
+	version = "21.4.135"
 
-repositories {
-	maven {
-		url "https://cursemaven.com/"
-		content {
-			includeGroup "curse.maven"
+    runs {
+		client {
+			client()
+			gameDirectory = project.file('run/client')
+			logLevel = org.slf4j.event.Level.DEBUG
+			ideName = "BiomeInfo " + ideName.get()
+		}
+    }
+
+	mods {
+		biomeinfo {
+			sourceSet(sourceSets.main)
 		}
 	}
-}
-
-dependencies {
-	implementation 'net.neoforged:neoforge:21.4.99-beta'
-//	implementation "curse.maven:configured-457570:5340194"
 }
 
 tasks.named('jar', Jar).configure {
@@ -44,11 +41,18 @@ tasks.named('jar', Jar).configure {
                     "Specification-Version": "${version}",
                     "Implementation-Title": "BiomeInfo",
                     "Implementation-Version": "${version}",
-                    "Implementation-Vendor": "bl4ckscor3"],)
+                    "Implementation-Vendor": "bl4ckscor3"])
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 	options.release = 21
+}
+
+idea {
+	module {
+		downloadSources = true
+		downloadJavadoc = true
+	}
 }
