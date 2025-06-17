@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joml.Matrix3x2fStack;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -111,13 +112,13 @@ public class BiomeInfoRenderer {
 						float scale = (float) Configuration.scale();
 						PositionPreset positionPreset = Configuration.positionPreset();
 						int textOffset = positionPreset.textAlignment().getNegativeOffset(mc.font, biomeName);
-						PoseStack pose = guiGraphics.pose();
+						Matrix3x2fStack pose = guiGraphics.pose();
 						Window window = mc.getWindow();
 
-						pose.pushPose();
-						pose.scale(scale, scale, scale);
+						pose.pushMatrix();
+						pose.scale(scale, scale);
 						guiGraphics.drawString(mc.font, biomeName, positionPreset.posX(window) - textOffset, positionPreset.posY(window, mc.font), Configuration.color() | (alpha << 24), Configuration.textShadow());
-						pose.popPose();
+						pose.popMatrix();
 					});
 				}
 			}
