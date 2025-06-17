@@ -6,16 +6,17 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joml.Matrix3x2fStack;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
@@ -73,7 +74,7 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 				}
 			}
 		});
-		HudRenderCallback.EVENT.register((graphics, delta) -> {
+		HudElementRegistry.attachElementAfter(VanillaHudElements.TITLE_AND_SUBTITLE, ResourceLocation.fromNamespaceAndPath("biomeinfo", "overlay"), (graphics, delta) -> {
 			if (config.enabled) {
 				Minecraft mc = Minecraft.getInstance();
 
@@ -110,13 +111,13 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 							float scale = (float) config.scale;
 							PositionPreset positionPreset = config.positionPreset;
 							int textOffset = positionPreset.textAlignment().getNegativeOffset(mc.font, biomeName);
-							PoseStack pose = graphics.pose();
+							Matrix3x2fStack pose = graphics.pose();
 							Window window = mc.getWindow();
 
-							pose.pushPose();
-							pose.scale(scale, scale, scale);
+							pose.pushMatrix();
+							pose.scale(scale, scale);
 							graphics.drawString(mc.font, biomeName, positionPreset.posX(window) - textOffset, positionPreset.posY(window, mc.font), config.color | (alpha << 24), config.textShadow);
-							pose.popPose();
+							pose.popMatrix();
 						});
 					}
 				}
