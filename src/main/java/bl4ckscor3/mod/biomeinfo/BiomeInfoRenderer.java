@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joml.Matrix3x2fStack;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLLoader;
@@ -35,7 +33,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 
-@EventBusSubscriber(modid = BiomeInfo.MODID, value = Dist.CLIENT, bus = Bus.MOD)
+@EventBusSubscriber(modid = BiomeInfo.MODID, value = Dist.CLIENT)
 public class BiomeInfoRenderer {
 	public static final int MARGIN = 3;
 	public static Biome previousBiome;
