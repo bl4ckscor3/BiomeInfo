@@ -5,18 +5,18 @@ plugins {
 	id 'net.neoforged.moddev' version '2.0.82'
 }
 
-version = '1.7'
+version = '1.8'
 group = 'bl4ckscor3.mod.biomeinfo'
 
 base {
-	archivesName = 'biomeinfo-1.21.4'
+	archivesName = 'biomeinfo-1.21.5'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 neoForge {
-	version = "21.4.135"
+	version = "21.5.87"
 
     runs {
 		client {
