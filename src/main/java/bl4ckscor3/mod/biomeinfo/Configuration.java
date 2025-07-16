@@ -37,31 +37,31 @@ public class Configuration {
 	Configuration(ModConfigSpec.Builder builder) {
 		//@formatter:off
 		enabled = builder
-				.comment("true if the biome info should be shown, false otherwise")
+				.comment("true if the biome info should be shown, false otherwise.")
 				.define("enabled", true);
 		fadeOut = builder
-				.comment("true if the biome info should fade out shortly after a different biome has been entered. If this is set to false, the biome info will stay visible")
+				.comment("true if the biome info should fade out shortly after a different biome has been entered. If this is set to false, the biome info will stay visible.")
 				.define("fadeOut", true);
 		fadeIn = builder
-				.comment("true if the biome info should fade in when a different biome has been entered")
+				.comment("true if the biome info should fade in when a different biome has been entered.")
 				.define("fadeIn", true);
 		displayTime = builder
 				.comment("How long in ticks (20 ticks = 1 second) to display the biome info, if fadeOut = true. If fadeIn = true, the time will be counted from the moment the biome info has finished fading in.")
 				.defineInRange("displayTime", 30, 0, Integer.MAX_VALUE);
 		posX = builder
-				.comment("The X position to display the biome info at")
+				.comment("The X position to display the biome info at.")
 				.defineInRange("posX", BiomeInfoRenderer.MARGIN, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		posY = builder
-				.comment("The Y position to display the biome info at")
+				.comment("The Y position to display the biome info at.")
 				.defineInRange("posY", BiomeInfoRenderer.MARGIN, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		scale = builder
-				.comment("The size of the biome info (multiplier)")
+				.comment("The size of the biome info (multiplier).")
 				.defineInRange("scale", 1.0D, 0.0D, Double.MAX_VALUE);
 		textShadow = builder
-				.comment("true if the biome info should be rendered with a shadow, false otherwise")
+				.comment("true if the biome info should be rendered with a shadow, false otherwise.")
 				.define("textShadow", true);
 		color = builder
-				.comment("The color to display the biome info in (Format: 0xRRGGBB)")
+				.comment("The color to display the biome info in (Format: 0xRRGGBB).")
 				.defineInRange("color", 0xffffff, 0x000000, 0xffffff);
 		hideOnDebugScreen = builder
 				.comment("If true, hides the mod's info text when the debug screen (F3) is open.")
@@ -70,7 +70,7 @@ public class Configuration {
 				.comment("If true, hides the mod's info text when the game's UI is also hidden (F1).")
 				.define("hideWithUI", true);
 		fallbackOnUntranslatableName = builder
-				.comment("If true, will automatically fromat biome names that do not have a proper translation into an English name.")
+				.comment("If true, will automatically format biome names that do not have a proper translation into an English name.")
 				.define("fallbackOnUntranslatableName", true);
 		appendModName = builder
 				.comment("If true, will append the mod name the biome is from to the biome name.")
