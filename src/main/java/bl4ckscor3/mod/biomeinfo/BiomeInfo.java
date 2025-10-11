@@ -1,15 +1,5 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-
-import org.apache.commons.lang3.StringUtils;
-import org.joml.Matrix3x2fStack;
-
-import com.mojang.blaze3d.platform.Window;
-
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
@@ -31,9 +21,17 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.biome.Biome;
+import org.apache.commons.lang3.StringUtils;
+import org.joml.Matrix3x2fStack;
+
+import com.mojang.blaze3d.platform.Window;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class BiomeInfo implements ClientModInitializer, IdentifiableResourceReloadListener {
 	public static final int MARGIN = 3;
@@ -189,7 +187,7 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 	}
 
 	@Override
-	public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, Executor executor, Executor executor2) {
+	public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier preparationBarrier, Executor executor2) {
 		return CompletableFuture.runAsync(NAME_CACHE::clear, executor).thenCompose(preparationBarrier::wait);
 	}
 
