@@ -1,14 +1,5 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-
-import org.apache.commons.lang3.StringUtils;
-import org.joml.Matrix3x2fStack;
-
-import com.mojang.blaze3d.platform.Window;
-
 import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -32,6 +23,14 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
+import org.apache.commons.lang3.StringUtils;
+import org.joml.Matrix3x2fStack;
+
+import com.mojang.blaze3d.platform.Window;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = BiomeInfo.MODID, value = Dist.CLIENT)
 public class BiomeInfoRenderer {
@@ -174,7 +173,7 @@ public class BiomeInfoRenderer {
 	private static String getModName(ResourceLocation location) {
 		String namespace = location.getNamespace();
 
-		for (ModInfo info : FMLLoader.getLoadingModList().getMods()) {
+		for (ModInfo info : FMLLoader.getCurrent().getLoadingModList().getMods()) {
 			if (info.getModId().equals(namespace))
 				return info.getDisplayName();
 		}
@@ -184,7 +183,7 @@ public class BiomeInfoRenderer {
 
 	@SubscribeEvent
 	public static void onResourceManagerReload(AddClientReloadListenersEvent event) {
-		event.addListener(ResourceLocation.fromNamespaceAndPath(BiomeInfo.MODID, "cache_invalidation"), (barrier, manager, backgroundExecutor, gameExecutor) -> CompletableFuture.runAsync(NAME_CACHE::clear, backgroundExecutor).thenCompose(barrier::wait));
+		event.addListener(ResourceLocation.fromNamespaceAndPath(BiomeInfo.MODID, "cache_invalidation"), (state, backgroundExecutor, barrier, gameExecutor) -> CompletableFuture.runAsync(NAME_CACHE::clear, backgroundExecutor).thenCompose(barrier::wait));
 	}
 
 	@SubscribeEvent
