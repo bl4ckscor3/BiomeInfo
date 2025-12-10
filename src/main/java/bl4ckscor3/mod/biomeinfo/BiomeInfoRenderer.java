@@ -1,6 +1,14 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import net.minecraft.Util;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
+import org.apache.commons.lang3.StringUtils;
+import org.joml.Matrix3x2fStack;
+
+import com.mojang.blaze3d.platform.Window;
+
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -8,8 +16,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.biome.Biome;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -23,14 +32,6 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
-import org.apache.commons.lang3.StringUtils;
-import org.joml.Matrix3x2fStack;
-
-import com.mojang.blaze3d.platform.Window;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = BiomeInfo.MODID, value = Dist.CLIENT)
 public class BiomeInfoRenderer {
@@ -124,8 +125,8 @@ public class BiomeInfoRenderer {
 
 	private static Component getBiomeName(ResourceKey<Biome> key) {
 		return NAME_CACHE.computeIfAbsent(key, k -> {
-			ResourceLocation location = key.location();
-			String translationKey = Util.makeDescriptionId("biome", location);
+			Identifier identifier = key.identifier();
+			String translationKey = Util.makeDescriptionId("biome", identifier);
 			MutableComponent biomeName = Component.translatable(translationKey);
 			MutableComponent displayName = biomeName;
 
@@ -133,7 +134,7 @@ public class BiomeInfoRenderer {
 				String displayedText = biomeName.getString();
 
 				if (displayedText.equals(translationKey)) {
-					String biomePath = key.location().getPath(); //e.g. "birch_forest"
+					String biomePath = key.identifier().getPath(); //e.g. "birch_forest"
 					String formattedBiomeName = snakeCaseToEnglish(biomePath);
 
 					displayName = Component.literal(formattedBiomeName);
@@ -141,7 +142,7 @@ public class BiomeInfoRenderer {
 			}
 
 			if (Configuration.appendModName()) {
-				String modName = getModName(location);
+				String modName = getModName(identifier);
 
 				if (modName != null)
 					displayName = displayName.append(Component.literal(String.format(" (%s)", modName)));
@@ -170,8 +171,8 @@ public class BiomeInfoRenderer {
 		return formatted.toString().trim();
 	}
 
-	private static String getModName(ResourceLocation location) {
-		String namespace = location.getNamespace();
+	private static String getModName(Identifier identifier) {
+		String namespace = identifier.getNamespace();
 
 		for (ModInfo info : FMLLoader.getCurrent().getLoadingModList().getMods()) {
 			if (info.getModId().equals(namespace))
@@ -183,12 +184,12 @@ public class BiomeInfoRenderer {
 
 	@SubscribeEvent
 	public static void onResourceManagerReload(AddClientReloadListenersEvent event) {
-		event.addListener(ResourceLocation.fromNamespaceAndPath(BiomeInfo.MODID, "cache_invalidation"), (state, backgroundExecutor, barrier, gameExecutor) -> CompletableFuture.runAsync(NAME_CACHE::clear, backgroundExecutor).thenCompose(barrier::wait));
+		event.addListener(Identifier.fromNamespaceAndPath(BiomeInfo.MODID, "cache_invalidation"), (state, backgroundExecutor, barrier, gameExecutor) -> CompletableFuture.runAsync(NAME_CACHE::clear, backgroundExecutor).thenCompose(barrier::wait));
 	}
 
 	@SubscribeEvent
 	public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
-		event.registerAbove(VanillaGuiLayers.TITLE, ResourceLocation.fromNamespaceAndPath(BiomeInfo.MODID, "overlay"), BiomeInfoRenderer::renderBiomeInfo);
+		event.registerAbove(VanillaGuiLayers.TITLE, Identifier.fromNamespaceAndPath(BiomeInfo.MODID, "overlay"), BiomeInfoRenderer::renderBiomeInfo);
 	}
 
 	@SubscribeEvent
