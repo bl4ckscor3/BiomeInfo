@@ -1,5 +1,15 @@
 package bl4ckscor3.mod.biomeinfo;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+
+import org.apache.commons.lang3.StringUtils;
+import org.joml.Matrix3x2fStack;
+
+import com.mojang.blaze3d.platform.Window;
+
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
@@ -12,26 +22,17 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.biome.Biome;
-import org.apache.commons.lang3.StringUtils;
-import org.joml.Matrix3x2fStack;
-
-import com.mojang.blaze3d.platform.Window;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 public class BiomeInfo implements ClientModInitializer, IdentifiableResourceReloadListener {
 	public static final int MARGIN = 3;
@@ -72,7 +73,7 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 				}
 			}
 		});
-		HudElementRegistry.attachElementAfter(VanillaHudElements.TITLE_AND_SUBTITLE, ResourceLocation.fromNamespaceAndPath("biomeinfo", "overlay"), (graphics, delta) -> {
+		HudElementRegistry.attachElementAfter(VanillaHudElements.TITLE_AND_SUBTITLE, Identifier.fromNamespaceAndPath("biomeinfo", "overlay"), (graphics, delta) -> {
 			if (config.enabled) {
 				Minecraft mc = Minecraft.getInstance();
 
@@ -126,7 +127,7 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 
 	private static Component getBiomeName(ResourceKey<Biome> key) {
 		return NAME_CACHE.computeIfAbsent(key, k -> {
-			ResourceLocation location = key.location();
+			Identifier location = key.identifier();
 			String translationKey = Util.makeDescriptionId("biome", location);
 			MutableComponent biomeName = Component.translatable(translationKey);
 			MutableComponent displayName = biomeName;
@@ -135,7 +136,7 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 				String displayedText = biomeName.getString();
 
 				if (displayedText.equals(translationKey)) {
-					String biomePath = key.location().getPath(); //e.g. "birch_forest"
+					String biomePath = key.identifier().getPath(); //e.g. "birch_forest"
 					String formattedBiomeName = snakeCaseToEnglish(biomePath);
 
 					displayName = Component.literal(formattedBiomeName);
@@ -172,7 +173,7 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 		return formatted.toString().trim();
 	}
 
-	private static String getModName(ResourceLocation location) {
+	private static String getModName(Identifier location) {
 		String namespace = location.getNamespace();
 
 		//@formatter:off
@@ -192,7 +193,7 @@ public class BiomeInfo implements ClientModInitializer, IdentifiableResourceRelo
 	}
 
 	@Override
-	public ResourceLocation getFabricId() {
-		return ResourceLocation.fromNamespaceAndPath("biomeinfo", "cache_invalidation");
+	public Identifier getFabricId() {
+		return Identifier.fromNamespaceAndPath("biomeinfo", "cache_invalidation");
 	}
 }
