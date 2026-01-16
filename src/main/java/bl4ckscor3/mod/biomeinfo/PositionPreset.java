@@ -1,8 +1,6 @@
 package bl4ckscor3.mod.biomeinfo;
 
 import java.util.function.Supplier;
-import java.util.function.ToIntBiFunction;
-import java.util.function.ToIntFunction;
 
 import com.mojang.blaze3d.platform.Window;
 
@@ -13,109 +11,119 @@ import static bl4ckscor3.mod.biomeinfo.BiomeInfoRenderer.MARGIN;
 public enum PositionPreset {
 	NONE(
 		window -> Configuration.posX(),
-		(window, font) -> Configuration.posY(),
+		(window, lineHeight) -> Configuration.posY(),
 		Configuration::textAlignment
 	),
 	TOP_LEFT(
 		window -> MARGIN,
-		(window, font) -> MARGIN,
+		(window, lineHeight) -> MARGIN,
 		() -> TextAlignment.LEFT
 	),
 	TOP_MIDDLE(
 		window -> window.getGuiScaledWidth() / 2,
-		(window, font) -> MARGIN,
+		(window, lineHeight) -> MARGIN,
 		() -> TextAlignment.MIDDLE
 	),
 	TOP_RIGHT(
 		window -> window.getGuiScaledWidth() - MARGIN,
-		(window, font) -> MARGIN,
+		(window, lineHeight) -> MARGIN,
 		() -> TextAlignment.RIGHT
 	),
 	MIDDLE_LEFT(
 		window -> MARGIN,
-		(window, font) -> window.getGuiScaledHeight() / 2 - font.lineHeight / 2,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() / 2.0F - lineHeight / 2),
 		() -> TextAlignment.LEFT
 	),
 	MIDDLE(
 		window -> window.getGuiScaledWidth() / 2,
-		(window, font) -> window.getGuiScaledHeight() / 2 - font.lineHeight / 2,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() / 2.0F - lineHeight / 2),
 		() -> TextAlignment.MIDDLE
 	),
 	MIDDLE_RIGHT(
 		window -> window.getGuiScaledWidth() - MARGIN,
-		(window, font) -> window.getGuiScaledHeight() / 2 - font.lineHeight / 2,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() / 2.0F - lineHeight / 2),
 		() -> TextAlignment.RIGHT
 	),
 	BOTTOM_LEFT(
 		window -> MARGIN,
-		(window, font) -> window.getGuiScaledHeight() - MARGIN - font.lineHeight,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() - MARGIN - lineHeight),
 		() -> TextAlignment.LEFT
 	),
 	BOTTOM_MIDDLE(
 		window -> window.getGuiScaledWidth() / 2,
-		(window, font) -> window.getGuiScaledHeight() - MARGIN - font.lineHeight,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() - MARGIN - lineHeight),
 		() -> TextAlignment.MIDDLE
 	),
 	BOTTOM_RIGHT(
 		window -> {return window.getGuiScaledWidth() - MARGIN;},
-		(window, font) -> window.getGuiScaledHeight() - MARGIN - font.lineHeight,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() - MARGIN - lineHeight),
 		() -> TextAlignment.RIGHT
 	),
 	ABOVE_MIDDLE(
 		window -> window.getGuiScaledWidth() / 2,
-		(window, font) -> window.getGuiScaledHeight() / 4,
+		(window, lineHeight) -> window.getGuiScaledHeight() / 4,
 		() -> TextAlignment.MIDDLE
 	),
 	ABOVE_HOTBAR(
 		window -> window.getGuiScaledWidth() / 2,
-		(window, font) -> window.getGuiScaledHeight() - 68,
+		(window, lineHeight) -> window.getGuiScaledHeight() - 68,
 		() -> TextAlignment.MIDDLE
 	),
 	LEFT_OF_CROSSHAIR(
 		window -> window.getGuiScaledWidth() / 2 - MARGIN - 3,
-		(window, font) -> window.getGuiScaledHeight() / 2 - font.lineHeight / 2,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() / 2.0F - lineHeight / 2),
 		() -> TextAlignment.RIGHT
 	),
 	RIGHT_OF_CROSSHAIR(
 		window -> window.getGuiScaledWidth() / 2 + MARGIN + 3,
-		(window, font) -> window.getGuiScaledHeight() / 2 - font.lineHeight / 2,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() / 2.0F - lineHeight / 2),
 		() -> TextAlignment.LEFT
 	),
 	ABOVE_CROSSHAIR(
 		window -> window.getGuiScaledWidth() / 2,
-		(window, font) -> window.getGuiScaledHeight() / 2 - MARGIN - 3 - font.lineHeight,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() / 2.0F - MARGIN - 3 - lineHeight),
 		() -> TextAlignment.MIDDLE
 	),
 	UNDER_CROSSHAIR_WITH_ATTACK_INDICATOR(
 		window -> window.getGuiScaledWidth() / 2,
-		(window, font) -> window.getGuiScaledHeight() / 2 + MARGIN + 4 + font.lineHeight,
+		(window, lineHeight) -> (int) (window.getGuiScaledHeight() / 2.0F + MARGIN + 4 + lineHeight),
 		() -> TextAlignment.MIDDLE
 	),
 	UNDER_CROSSHAIR(
 		window -> window.getGuiScaledWidth() / 2,
-		(window, font) -> window.getGuiScaledHeight() / 2 + MARGIN + 3,
+		(window, lineHeight) -> window.getGuiScaledHeight() / 2 + MARGIN + 3,
 		() -> TextAlignment.MIDDLE
 	);
 
-	private final ToIntFunction<Window> xGetter;
-	private final ToIntBiFunction<Window, Font> yGetter;
+	private final XPosition xPosition;
+	private final YPosition yPosition;
 	private final Supplier<TextAlignment> textAlignmentGetter;
 
-	PositionPreset(ToIntFunction<Window> xGetter, ToIntBiFunction<Window, Font> yGetter, Supplier<TextAlignment> textAlignmentGetter) {
-		this.xGetter = xGetter;
-		this.yGetter = yGetter;
+	PositionPreset(XPosition xPosition, YPosition yPosition, Supplier<TextAlignment> textAlignmentGetter) {
+		this.xPosition = xPosition;
+		this.yPosition = yPosition;
 		this.textAlignmentGetter = textAlignmentGetter;
 	}
 
 	public int posX(Window window) {
-		return xGetter.applyAsInt(window);
+		return xPosition.get(window);
 	}
 
-	public int posY(Window window, Font font) {
-		return yGetter.applyAsInt(window, font);
+	public int posY(Window window, Font font, float scale) {
+		return yPosition.get(window, font.lineHeight * scale);
 	}
 
 	public TextAlignment textAlignment() {
 		return textAlignmentGetter.get();
+	}
+
+	@FunctionalInterface
+	public interface XPosition {
+		int get(Window window);
+	}
+
+	@FunctionalInterface
+	public interface YPosition {
+		int get(Window window, float lineHeight);
 	}
 }

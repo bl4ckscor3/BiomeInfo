@@ -1,22 +1,25 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import java.util.function.BiFunction;
-
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
 public enum TextAlignment {
-	LEFT((font, component) -> 0),
-	MIDDLE((font, component) -> font.width(component) / 2),
-	RIGHT(Font::width);
+	LEFT((font, component, scale) -> 0),
+	MIDDLE((font, component, scale) -> (int) (font.width(component) * scale / 2.0F)),
+	RIGHT((font, component, scale) -> (int) (font.width(component) * scale));
 
-	private final BiFunction<Font, Component, Integer> negativeOffset;
+	private final NegativeOffset negativeOffset;
 
-	TextAlignment(BiFunction<Font, Component, Integer> offset) {
+	TextAlignment(NegativeOffset offset) {
 		this.negativeOffset = offset;
 	}
 
-	public int getNegativeOffset(Font font, Component biomeName) {
-		return negativeOffset.apply(font, biomeName);
+	public int getNegativeOffset(Font font, Component biomeName, float scale) {
+		return negativeOffset.get(font, biomeName, scale);
+	}
+
+	@FunctionalInterface
+	public interface NegativeOffset {
+		int get(Font font, Component biomeName, float scale);
 	}
 }
