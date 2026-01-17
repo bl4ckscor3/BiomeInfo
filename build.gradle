@@ -5,7 +5,7 @@ plugins {
 	id 'net.neoforged.moddev' version '2.0.115'
 }
 
-version = '1.8'
+version = '1.8.1'
 group = 'bl4ckscor3.mod.biomeinfo'
 
 base {
