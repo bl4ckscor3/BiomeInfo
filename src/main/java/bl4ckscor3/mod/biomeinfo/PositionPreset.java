@@ -1,7 +1,5 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import static bl4ckscor3.mod.biomeinfo.BiomeInfo.MARGIN;
-
 import java.util.function.Supplier;
 import java.util.function.ToIntBiFunction;
 import java.util.function.ToIntFunction;
@@ -10,8 +8,10 @@ import com.mojang.blaze3d.platform.Window;
 
 import net.minecraft.client.gui.Font;
 
+import static bl4ckscor3.mod.biomeinfo.BiomeInfoRenderer.MARGIN;
+
 public enum PositionPreset {
-	NONE(window -> BiomeInfo.config.posX, (window, font) -> BiomeInfo.config.posY, () -> BiomeInfo.config.textAlignment),
+	NONE(window -> Configuration.posX(), (window, font) -> Configuration.posY(), Configuration::textAlignment),
 	TOP_LEFT(window -> MARGIN, (window, font) -> MARGIN, () -> TextAlignment.LEFT),
 	TOP_MIDDLE(window -> window.getGuiScaledWidth() / 2, (window, font) -> MARGIN, () -> TextAlignment.MIDDLE),
 	TOP_RIGHT(window -> window.getGuiScaledWidth() - MARGIN, (window, font) -> MARGIN, () -> TextAlignment.RIGHT),
