@@ -1,13 +1,15 @@
 package bl4ckscor3.mod.biomeinfo;
 
+import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.minecraft.world.InteractionResult;
 
 @Config(name = "biomeinfo")
-public class BiomeInfoConfig implements ConfigData {
-	//@formatter:off
+public class Configuration implements ConfigData {
 	@Comment("true if the biome info should be shown, false otherwise")
 	boolean enabled = true;
 
@@ -52,6 +54,77 @@ public class BiomeInfoConfig implements ConfigData {
 	TextAlignment textAlignment = TextAlignment.LEFT;
 
 	@Comment("This lets BiomeInfo automatically determine the correct position of the text without needing to change the posX, posY, or textAlignment configuration settings manually.\n" +
-			"If this is set to NONE, then BiomeInfo will use those configuration settings. If this is set to anything other than NONE, they will be ignored.")
+		"If this is set to NONE, then BiomeInfo will use those configuration settings. If this is set to anything other than NONE, they will be ignored.")
 	PositionPreset positionPreset = PositionPreset.TOP_LEFT;
+
+	private static Configuration config;
+
+	public static void bootstrap() {
+		ConfigHolder<Configuration> configHolder = AutoConfig.getConfigHolder(Configuration.class);
+		configHolder.registerSaveListener((holder, config) -> {
+			BiomeInfoRenderer.NAME_CACHE.clear();
+			return InteractionResult.SUCCESS;
+		});
+		config = configHolder.getConfig();
+	}
+
+	public static boolean enabled() {
+		return config.enabled;
+	}
+
+	public static boolean fadeOut() {
+		return config.fadeOut;
+	}
+
+	public static boolean fadeIn() {
+		return config.fadeIn;
+	}
+
+	public static int displayTime() {
+		return config.displayTime;
+	}
+
+	public static int posX() {
+		return config.posX;
+	}
+
+	public static int posY() {
+		return config.posY;
+	}
+
+	public static double scale() {
+		return config.scale;
+	}
+
+	public static boolean textShadow() {
+		return config.textShadow;
+	}
+
+	public static int color() {
+		return config.color;
+	}
+
+	public static boolean hideOnDebugScreen() {
+		return config.hideOnDebugScreen;
+	}
+
+	public static boolean hideWithUI() {
+		return config.hideWithUI;
+	}
+
+	public static boolean fallbackOnUntranslatableName() {
+		return config.fallbackOnUntranslatableName;
+	}
+
+	public static boolean appendModName() {
+		return config.appendModName;
+	}
+
+	public static TextAlignment textAlignment() {
+		return config.textAlignment;
+	}
+
+	public static PositionPreset positionPreset() {
+		return config.positionPreset;
+	}
 }
