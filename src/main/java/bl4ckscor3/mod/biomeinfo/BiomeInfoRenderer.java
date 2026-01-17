@@ -91,7 +91,7 @@ public class BiomeInfoRenderer {
 						Component biomeName = getBiomeName(key);
 						float scale = (float) Configuration.scale();
 						PositionPreset positionPreset = Configuration.positionPreset();
-						int textOffset = positionPreset.textAlignment().getNegativeOffset(mc.font, biomeName);
+						int textOffset = positionPreset.textAlignment().getNegativeOffset(mc.font, biomeName, scale);
 						Matrix3x2fStack pose = guiGraphics.pose();
 						Window window = mc.getWindow();
 
@@ -100,8 +100,8 @@ public class BiomeInfoRenderer {
 						guiGraphics.drawString(
 							mc.font,
 							biomeName,
-							(positionPreset.posX(window) - textOffset),
-							positionPreset.posY(window, mc.font),
+							(int) ((positionPreset.posX(window) - textOffset) / scale),
+							(int) (positionPreset.posY(window, mc.font, scale) / scale),
 							Configuration.color() | (alpha << 24),
 							Configuration.textShadow()
 						);
