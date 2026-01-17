@@ -97,7 +97,14 @@ public class BiomeInfoRenderer {
 
 						pose.pushMatrix();
 						pose.scale(scale, scale);
-						guiGraphics.drawString(mc.font, biomeName, (positionPreset.posX(window) - textOffset), positionPreset.posY(window, mc.font), Configuration.color() | (alpha << 24), Configuration.textShadow());
+						guiGraphics.drawString(
+							mc.font,
+							biomeName,
+							(positionPreset.posX(window) - textOffset),
+							positionPreset.posY(window, mc.font),
+							Configuration.color() | (alpha << 24),
+							Configuration.textShadow()
+						);
 						pose.popMatrix();
 					});
 				}
