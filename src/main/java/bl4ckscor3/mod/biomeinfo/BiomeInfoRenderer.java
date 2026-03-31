@@ -13,7 +13,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -55,7 +55,7 @@ public class BiomeInfoRenderer {
 		}
 	}
 
-	public static void renderBiomeInfo(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+	public static void renderBiomeInfo(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
 		if (Configuration.enabled()) {
 			Minecraft mc = Minecraft.getInstance();
 
@@ -97,7 +97,7 @@ public class BiomeInfoRenderer {
 
 						pose.pushMatrix();
 						pose.scale(scale, scale);
-						guiGraphics.drawString(
+						guiGraphics.text(
 							mc.font,
 							biomeName,
 							(int) ((positionPreset.posX(window) - textOffset) / scale),

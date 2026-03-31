@@ -26,6 +26,6 @@ public class BiomeInfo implements ClientModInitializer {
 		Configuration.bootstrap();
 		ClientTickEvents.START_CLIENT_TICK.register(BiomeInfoRenderer::onClientTick);
 		HudElementRegistry.attachElementAfter(VanillaHudElements.TITLE_AND_SUBTITLE, Identifier.fromNamespaceAndPath("biomeinfo", "overlay"), BiomeInfoRenderer::renderBiomeInfo);
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(Identifier.fromNamespaceAndPath("biomeinfo", "cache_invalidation"), (state, backgroundExecutor, barrier, gameExecutor) -> CompletableFuture.runAsync(NAME_CACHE::clear, backgroundExecutor).thenCompose(barrier::wait));
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(Identifier.fromNamespaceAndPath("biomeinfo", "cache_invalidation"), (state, backgroundExecutor, barrier, gameExecutor) -> CompletableFuture.runAsync(NAME_CACHE::clear, backgroundExecutor).thenCompose(barrier::wait));
 	}
 }

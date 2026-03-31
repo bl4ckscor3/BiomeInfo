@@ -28,10 +28,10 @@
   },
 
   "depends": {
-    "fabricloader": ">=0.7.0",
-    "minecraft": ">=1.21.11",
-    "java": ">=21",
-    "cloth-config": ">=6.2.57"
+    "fabricloader": ">=0.18.4",
+    "minecraft": ">=26",
+    "java": ">=25",
+    "cloth-config": ">=26.1"
   },
   "custom": {
     "modmenu:clientsideOnly": true
