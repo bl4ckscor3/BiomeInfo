@@ -9,4 +9,5 @@
 *.launch
 /.settings
 /logs
+/out
 .idea/
