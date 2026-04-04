@@ -1,15 +1,13 @@
 plugins {
-    id 'multiloader-loader'
-    id 'net.fabricmc.fabric-loom'
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
 repositories {
     maven {
         url "https://maven.terraformersmc.com/releases"
-    }
-
-    maven {
-        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+        content {
+            includeGroup "com.terraformersmc"
+        }
     }
 }
 
@@ -17,6 +15,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation project(":common")
     implementation "com.terraformersmc:modmenu:${modmenu_version}"
     implementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${fcap_version}"
 }
@@ -32,22 +31,10 @@ loom {
     }
 }
 
-def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
-
-['apiElements', 'runtimeElements', 'includeInternal', 'modCompileClasspath'].each { variant ->
-    configurations.named("$variant") {
-        attributes {
-            attribute(loaderAttribute, 'fabric')
-        }
-    }
+tasks.withType(JavaCompile).configureEach {
+    source(project(":common").sourceSets.main.allSource)
 }
 
-sourceSets.configureEach {
-    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant->
-        configurations.named("$variant") {
-            attributes {
-                attribute(loaderAttribute, 'fabric')
-            }
-        }
-    }
+processResources {
+    from project(":common").sourceSets.main.resources
 }

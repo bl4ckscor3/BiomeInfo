@@ -1,58 +1,11 @@
 plugins {
-    id 'multiloader-common'
-    id 'net.neoforged.moddev'
+    id 'net.neoforged.moddev' version "${mdg_version}"
 }
 
 neoForge {
     neoFormVersion = neo_form_version
 }
 
-repositories {
-    maven {
-        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
-    }
-}
-
 dependencies {
-    annotationProcessor 'io.github.llamalad7:mixinextras-common:0.3.5'
-    compileOnly 'org.spongepowered:mixin:0.8.5'
-    compileOnly 'io.github.llamalad7:mixinextras-common:0.3.5'
-    implementation "fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:${fcap_version}"
-}
-
-configurations {
-    commonJava {
-        canBeResolved = false
-        canBeConsumed = true
-    }
-
-    commonResources {
-        canBeResolved = false
-        canBeConsumed = true
-    }
-}
-
-artifacts {
-    commonJava sourceSets.main.java.sourceDirectories.singleFile
-    commonResources sourceSets.main.resources.sourceDirectories.singleFile
-}
-
-def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
-
-['apiElements', 'runtimeElements'].each { variant ->
-    configurations.named("$variant") {
-        attributes {
-            attribute(loaderAttribute, 'common')
-        }
-    }
-}
-
-sourceSets.configureEach {
-    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant->
-        configurations.named("$variant") {
-            attributes {
-                attribute(loaderAttribute, 'common')
-            }
-        }
-    }
+    api "fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:${fcap_version}"
 }
