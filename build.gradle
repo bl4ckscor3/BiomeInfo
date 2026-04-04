@@ -18,6 +18,8 @@ subprojects {
     }
 
     jar {
+        destinationDirectory = file("../build/libs")
+
         from(rootProject.file("LICENSE")) {
             rename { "${it}_${mod_name}" }
         }
@@ -38,6 +40,10 @@ subprojects {
     tasks.withType(JavaCompile).configureEach {
         it.options.encoding = 'UTF-8'
         it.options.getRelease().set(java_version.toInteger())
+    }
+
+    tasks.withType(AbstractTestTask).configureEach {
+        failOnNoDiscoveredTests = false
     }
 
     processResources {
