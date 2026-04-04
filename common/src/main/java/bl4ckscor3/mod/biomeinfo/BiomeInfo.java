@@ -1,21 +1,22 @@
 package bl4ckscor3.mod.biomeinfo;
 
-import java.util.ServiceLoader;
 import java.util.concurrent.CompletableFuture;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.neoforged.fml.config.IConfigSpec;
 
-public class CommonBiomeInfo {
+public class BiomeInfo {
 	public static final String MODID = "biomeinfo";
 	public static final Identifier OVERLAY_ID = Identifier.fromNamespaceAndPath(MODID, "overlay");
-	public static final PlatformHelper PLATFORM = load(PlatformHelper.class);
+	public static Platform platform;
 
-	public static <T> T load(Class<T> clazz) {
-		return ServiceLoader.load(clazz, CommonBiomeInfo.class.getClassLoader())
-			.findFirst()
-			.orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
+	public static void initialize(Platform platform) {
+		if (BiomeInfo.platform != null) {
+			throw new IllegalArgumentException("BiomeInfo platform has already been initialized");
+		}
+
+		BiomeInfo.platform = platform;
 	}
 
 	public static void registerReloadListener(ReloadListenerRegistration registrar) {
