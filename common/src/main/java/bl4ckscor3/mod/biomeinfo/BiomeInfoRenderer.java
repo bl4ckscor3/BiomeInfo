@@ -2,7 +2,6 @@ package bl4ckscor3.mod.biomeinfo;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joml.Matrix3x2fStack;
@@ -20,61 +19,41 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Util;
 import net.minecraft.world.level.biome.Biome;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.fml.loading.moddiscovery.ModInfo;
-import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import net.neoforged.neoforge.common.NeoForge;
 
-@EventBusSubscriber(modid = BiomeInfo.MODID, value = Dist.CLIENT)
 public class BiomeInfoRenderer {
 	public static final int MARGIN = 3;
 	public static Biome previousBiome;
 	public static int displayTime = 0;
 	public static int alpha = 0;
-	public static boolean complete = false;
 	public static boolean fadingIn = false;
 	public static final Map<ResourceKey<Biome>, Component> NAME_CACHE = new HashMap<>();
 
-	static {
-		NeoForge.EVENT_BUS.addListener(BiomeInfoRenderer::onClientTick);
-	}
-
 	private BiomeInfoRenderer() {}
 
-	public static void onClientTick(ClientTickEvent.Pre event) {
-		if (complete) {
-			if (!fadingIn) {
-				if (!Configuration.fadeOut() && alpha != 255)
-					alpha = 255;
-				else if (Configuration.fadeOut()) {
-					if (displayTime > 0)
-						displayTime--;
-					else if (alpha > 0)
-						alpha -= 10;
-				}
+	public static void onClientTick() {
+		if (!fadingIn) {
+			if (!Configuration.fadeOut() && alpha != 255)
+				alpha = 255;
+			else if (Configuration.fadeOut()) {
+				if (displayTime > 0)
+					displayTime--;
+				else if (alpha > 0)
+					alpha -= 10;
 			}
-			else { //when fading in
-				alpha += 10;
+		}
+		else { //when fading in
+			alpha += 10;
 
-				if (alpha >= 255) {
-					fadingIn = false;
-					displayTime = Configuration.displayTime();
-					alpha = 255;
-				}
+			if (alpha >= 255) {
+				fadingIn = false;
+				displayTime = Configuration.displayTime();
+				alpha = 255;
 			}
 		}
 	}
 
 	public static void renderBiomeInfo(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
-		if (complete && Configuration.enabled()) {
+		if (Configuration.enabled()) {
 			Minecraft mc = Minecraft.getInstance();
 
 			if (hideBecauseOfF1(mc) || hideBecauseOfF3(mc))
@@ -141,7 +120,7 @@ public class BiomeInfoRenderer {
 				String displayedText = biomeName.getString();
 
 				if (displayedText.equals(translationKey)) {
-					String biomePath = key.identifier().getPath(); //e.g. "birch_forest"
+					String biomePath = identifier.getPath(); //e.g. "birch_forest"
 					String formattedBiomeName = snakeCaseToEnglish(biomePath);
 
 					displayName = Component.literal(formattedBiomeName);
@@ -149,7 +128,8 @@ public class BiomeInfoRenderer {
 			}
 
 			if (Configuration.appendModName()) {
-				String modName = getModName(identifier);
+				String modid = identifier.getNamespace();
+				String modName = CommonBiomeInfo.PLATFORM.getModName(modid).orElseGet(() -> snakeCaseToEnglish(modid));
 
 				if (modName != null)
 					displayName = displayName.append(Component.literal(String.format(" (%s)", modName)));
@@ -176,37 +156,5 @@ public class BiomeInfoRenderer {
 		}
 
 		return formatted.toString().trim();
-	}
-
-	private static String getModName(Identifier identifier) {
-		String namespace = identifier.getNamespace();
-
-		for (ModInfo info : FMLLoader.getCurrent().getLoadingModList().getMods()) {
-			if (info.getModId().equals(namespace))
-				return info.getDisplayName();
-		}
-
-		return snakeCaseToEnglish(namespace);
-	}
-
-	@SubscribeEvent
-	public static void onResourceManagerReload(AddClientReloadListenersEvent event) {
-		event.addListener(Identifier.fromNamespaceAndPath(BiomeInfo.MODID, "cache_invalidation"), (state, backgroundExecutor, barrier, gameExecutor) -> CompletableFuture.runAsync(NAME_CACHE::clear, backgroundExecutor).thenCompose(barrier::wait));
-	}
-
-	@SubscribeEvent
-	public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
-		event.registerAbove(VanillaGuiLayers.TITLE, Identifier.fromNamespaceAndPath(BiomeInfo.MODID, "overlay"), BiomeInfoRenderer::renderBiomeInfo);
-	}
-
-	@SubscribeEvent
-	public static void onConfigChange(ModConfigEvent event) {
-		if (event.getConfig().getSpec() == Configuration.CONFIG_SPEC)
-			NAME_CACHE.clear();
-	}
-
-	@SubscribeEvent
-	public static void onLoadComplete(FMLLoadCompleteEvent event) {
-		complete = true;
 	}
 }

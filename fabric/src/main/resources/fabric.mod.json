@@ -1,0 +1,32 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {
+        "homepage": "https://curseforge.com/minecraft/mc-mods/biomeinfo-fabric",
+        "issues": "https://github.com/bl4ckscor3/BiomeInfo/issues",
+        "sources": "https://github.com/bl4ckscor3/BiomeInfo/tree/multiloader/${minecraft_version}"
+    },
+    "license": "${license}",
+    "icon": "assets/${mod_id}/icon.png",
+    "environment": "client",
+    "entrypoints": {
+        "client": [
+            "bl4ckscor3.mod.biomeinfo.BiomeInfo"
+        ]
+    },
+    "depends": {
+        "fabric-api": "*",
+        "minecraft": ">=${minecraft_version}",
+        "java": ">=${java_version}",
+        "forgeconfigapiport": ">=${fcap_version}"
+    },
+    "custom": {
+        "modmenu:clientsideOnly": true
+    }
+}

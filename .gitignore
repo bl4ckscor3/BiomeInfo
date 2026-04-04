@@ -1,13 +1,14 @@
-/bin
-/build
-/libs
-/.project
-/.classpath
-/.gradle
-/run
-/runs
-*.launch
-/.settings
-/logs
-/out
-.idea/
+# Gradle
+.gradle
+build
+libs
+runs
+
+# IntelliJ
+.idea
+out
+
+# Eclipse
+.settings
+.classpath
+.project
