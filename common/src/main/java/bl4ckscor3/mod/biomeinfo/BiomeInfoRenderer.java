@@ -129,7 +129,7 @@ public class BiomeInfoRenderer {
 
 			if (Configuration.appendModName()) {
 				String modid = identifier.getNamespace();
-				String modName = BiomeInfo.platform.getModName(modid).orElseGet(() -> snakeCaseToEnglish(modid));
+				String modName = BiomeInfo.platform().getModName(modid).orElseGet(() -> snakeCaseToEnglish(modid));
 
 				if (modName != null)
 					displayName = displayName.append(Component.literal(String.format(" (%s)", modName)));
