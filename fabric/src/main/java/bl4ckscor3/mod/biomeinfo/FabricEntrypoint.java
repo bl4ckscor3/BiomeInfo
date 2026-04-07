@@ -17,7 +17,7 @@ import net.minecraft.server.packs.PackType;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 
-public class Entrypoint implements ClientModInitializer, Platform {
+public class FabricEntrypoint implements ClientModInitializer, Platform {
 	@Override
 	public void onInitializeClient() {
 		ClientTickEvents.START_CLIENT_TICK.register(_ -> BiomeInfoRenderer.onClientTick());

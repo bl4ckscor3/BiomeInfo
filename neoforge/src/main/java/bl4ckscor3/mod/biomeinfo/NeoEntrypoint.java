@@ -19,8 +19,8 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 @Mod(BiomeInfo.MODID)
 @EventBusSubscriber
-public class Entrypoint implements Platform {
-	public Entrypoint(ModContainer modContainer) {
+public class NeoEntrypoint implements Platform {
+	public NeoEntrypoint(ModContainer modContainer) {
 		modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 		modContainer.registerConfig(ModConfig.Type.CLIENT, Configuration.CONFIG_SPEC);
 		BiomeInfo.initialize(this);
